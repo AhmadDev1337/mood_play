@@ -5,7 +5,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-import 'dashboard.dart';
+import 'home/bar_controller.dart';
 
 AppOpenAd? appOpenAd;
 
@@ -26,7 +26,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   MobileAds.instance.initialize();
 
-  loadAppOpenAd();
   runApp(MyApp());
 }
 
@@ -35,8 +34,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'WeHome',
-      home: DashboardPage(),
+      title: 'MoodPlay',
+      home: BarController(),
     );
   }
 }

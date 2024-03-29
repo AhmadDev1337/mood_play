@@ -48,6 +48,7 @@ dependencies:
   youtube_player_flutter: ^8.1.2
   internet_connectivity_checker: ^1.0.2
   lottie: ^2.6.0
+  video_player: ^2.8.2
 
 dev_dependencies:
   flutter_test:
