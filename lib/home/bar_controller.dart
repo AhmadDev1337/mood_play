@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -12,22 +11,6 @@ import 'genre song/pop_page.dart';
 import 'genre song/rnb_page.dart';
 import 'genre song/rock_page.dart';
 
-class JsonData {
-  final String imgUrl;
-  final String logoUrl;
-  final String videoUrl;
-  final String name;
-  final String title;
-
-  JsonData({
-    required this.imgUrl,
-    required this.logoUrl,
-    required this.videoUrl,
-    required this.name,
-    required this.title,
-  });
-}
-
 class BarController extends StatefulWidget {
   const BarController({super.key});
 
@@ -37,38 +20,6 @@ class BarController extends StatefulWidget {
 
 class _BarControllerState extends State<BarController> {
   int currentPageIndex = 0;
-  List<JsonData> jsonDataList = [];
-  bool isSearching = false;
-  final TextEditingController _searchController = TextEditingController();
-  List<JsonData> filteredJsonDataList = [];
-
-  void _startSearch() {
-    setState(() {
-      isSearching = true;
-      _searchController.text = '';
-    });
-  }
-
-  void _stopSearch() {
-    setState(() {
-      isSearching = false;
-      _searchController.clear();
-      filteredJsonDataList.clear();
-    });
-  }
-
-  void _performSearch(String query) {
-    setState(() {
-      if (query.isNotEmpty) {
-        filteredJsonDataList = jsonDataList
-            .where((jsonData) =>
-                jsonData.name.toLowerCase().contains(query.toLowerCase()))
-            .toList();
-      } else {
-        filteredJsonDataList = List.from(jsonDataList);
-      }
-    });
-  }
 
   final List<String> items = [
     "All",

@@ -8,13 +8,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 
-class ClassicPage extends StatefulWidget {
+class KpopListPage extends StatefulWidget {
   @override
-  _ClassicPageState createState() => _ClassicPageState();
+  _KpopListPageState createState() => _KpopListPageState();
 }
 
-class _ClassicPageState extends State<ClassicPage> {
-  List<dynamic> pops = [];
+class _KpopListPageState extends State<KpopListPage> {
+  List<dynamic> songs = [];
 
   @override
   void initState() {
@@ -24,10 +24,10 @@ class _ClassicPageState extends State<ClassicPage> {
 
   fetchData() async {
     final response =
-        await http.get(Uri.parse('https://pastebin.com/raw/YPc246hg'));
+        await http.get(Uri.parse('https://pastebin.com/raw/vQ249hqQ'));
     if (response.statusCode == 200) {
       setState(() {
-        pops = json.decode(response.body)['pops'];
+        songs = json.decode(response.body)['songs'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -39,88 +39,56 @@ class _ClassicPageState extends State<ClassicPage> {
     return Padding(
       padding: EdgeInsets.only(top: 20),
       child: GridView.count(
-        crossAxisCount: 1,
+        crossAxisCount: 2,
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
-        childAspectRatio: MediaQuery.of(context).size.width / 210,
+        childAspectRatio: MediaQuery.of(context).size.width / 150,
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
         children: List.generate(
-          pops.length < 15 ? pops.length : 15,
-          (index) => Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VideoPlayerPage(
-                            videoUrl: pops[index]['videoUrl'],
-                          )));
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      height: 150,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              pops[index]['imgUrl'],
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                                  detail: pops[index]['detailPage'],
-                                )));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Image.network(pops[index]['logoUrl'],
-                                width: 40, height: 40),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  pops[index]['name'],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  pops[index]['name'],
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
+          songs.length < 6 ? songs.length : 6,
+          (index) => GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      DetailPage(detail: songs[index]['detailPage']),
                 ),
+              );
+            },
+            child: Container(
+              width: MediaQuery.of(context).size.width * 0.4,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(
+                      songs[index]['imgUrl'],
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Color.fromARGB(255, 37, 36, 36).withOpacity(0.7),
+                    ),
+                    child: Center(
+                      child: Text(
+                        songs[index]["title"],
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
@@ -128,10 +96,24 @@ class _ClassicPageState extends State<ClassicPage> {
   }
 }
 
-class DetailPage extends StatelessWidget {
+class DetailPage extends StatefulWidget {
   final List<dynamic> detail;
 
   DetailPage({required this.detail});
+
+  @override
+  State<DetailPage> createState() => _DetailPageState();
+}
+
+class _DetailPageState extends State<DetailPage> {
+  String searchText = '';
+
+  List<dynamic> filterDataByName(String searchText) {
+    return widget.detail.where((data) {
+      String name = data['nameAccount'].toLowerCase();
+      return name.contains(searchText.toLowerCase());
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -139,6 +121,7 @@ class DetailPage extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: "MoodPlay",
       home: Scaffold(
+        backgroundColor: Color(0xff0d0d0d),
         appBar: AppBar(
           backgroundColor: Color(0xff0d0d0d),
           elevation: 0,
@@ -165,79 +148,115 @@ class DetailPage extends StatelessWidget {
               ],
             ),
           ),
-        ),
-        backgroundColor: Color(0xff0d0d0d),
-        body: ListView.builder(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          itemCount: detail.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Column(
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => VideoPlayerPage(
-                            videoUrl: detail[index]['videoUrlAccount']),
-                      ),
-                    );
+          actions: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width * 0.4,
+                child: TextField(
+                  onChanged: (value) {
+                    setState(() {
+                      searchText = value;
+                    });
                   },
-                  child: Row(
+                  decoration: InputDecoration(
+                    hintText: 'Search song...',
+                    hintStyle: TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: Colors.white,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.white),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: filterDataByName(searchText).length,
+                itemBuilder: (BuildContext context, int index) {
+                  var filteredData = filterDataByName(searchText);
+                  return Column(
                     children: [
-                      SizedBox(
-                        width: 130,
-                        height: 80,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            detail[index]['fotoAccount'],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 10),
-                      Container(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VideoPlayerPage(
+                                  videoUrl: widget.detail[index]
+                                      ['videoUrlAccount']),
+                            ),
+                          );
+                        },
+                        child: Row(
                           children: [
-                            Text(
-                              detail[index]['nameAccount'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 20,
-                              ),
-                            ),
                             SizedBox(
-                              height: 2,
-                            ),
-                            Text(
-                              detail[index]['titleAccount'],
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 10,
+                              width: 130,
+                              height: 80,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: Image.network(
+                                  filteredData[index]['fotoAccount'],
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                             ),
-                            Text(
-                              detail[index]['titleAccount'],
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 10,
+                            SizedBox(width: 10),
+                            Container(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    filteredData[index]['nameAccount'],
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    filteredData[index]['titleAccount'],
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                  Text(
+                                    filteredData[index]['titleAccount'],
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
                           ],
                         ),
                       ),
+                      SizedBox(height: 15),
                     ],
-                  ),
-                ),
-                SizedBox(height: 15),
-              ],
-            );
-          },
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
