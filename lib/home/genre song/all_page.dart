@@ -20,66 +20,66 @@ class AllPage extends StatefulWidget {
 }
 
 class _AllPageState extends State<AllPage> {
-  // PageController _pageController = PageController();
-  // List<String> imageUrls = [];
+  PageController _pageController = PageController();
+  List<String> imageUrls = [];
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   fetchImageCarousel();
-  //   _pageController.addListener(() {
-  //     setState(() {});
-  //   });
-  // }
+  @override
+  void initState() {
+    super.initState();
+    fetchImageCarousel();
+    _pageController.addListener(() {
+      setState(() {});
+    });
+  }
 
-  // @override
-  // void dispose() {
-  //   _pageController.dispose();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
-  // Future<void> fetchImageCarousel() async {
-  //   final response =
-  //       await http.get(Uri.parse('https://pastebin.com/raw/AZPxStDx'));
+  Future<void> fetchImageCarousel() async {
+    final response =
+        await http.get(Uri.parse('https://pastebin.com/raw/AZPxStDx'));
 
-  //   if (response.statusCode == 200) {
-  //     final List<dynamic> data = json.decode(response.body);
-  //     setState(() {
-  //       imageUrls = List<String>.from(data);
-  //     });
-  //     // Start automatic image change
-  //     startImageSlider();
-  //   } else {
-  //     Scaffold(
-  //       backgroundColor: Colors.white,
-  //       body: Container(
-  //         child: Center(
-  //           child: SpinKitWave(
-  //             color: Color(0xFFE1261C),
-  //             size: 25,
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  // }
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        imageUrls = List<String>.from(data);
+      });
+      // Start automatic image change
+      startImageSlider();
+    } else {
+      Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+          child: Center(
+            child: SpinKitWave(
+              color: Color(0xFFE1261C),
+              size: 25,
+            ),
+          ),
+        ),
+      );
+    }
+  }
 
-  // void startImageSlider() {
-  //   Timer.periodic(Duration(seconds: 3), (Timer timer) {
-  //     if (_pageController.page! < imageUrls.length - 1) {
-  //       _pageController.nextPage(
-  //         duration: Duration(milliseconds: 350),
-  //         curve: Curves.easeIn,
-  //       );
-  //     } else {
-  //       _pageController.animateToPage(
-  //         0,
-  //         duration: Duration(milliseconds: 350),
-  //         curve: Curves.easeIn,
-  //       );
-  //     }
-  //   });
-  // }
+  void startImageSlider() {
+    Timer.periodic(Duration(seconds: 3), (Timer timer) {
+      if (_pageController.page! < imageUrls.length - 1) {
+        _pageController.nextPage(
+          duration: Duration(milliseconds: 350),
+          curve: Curves.easeIn,
+        );
+      } else {
+        _pageController.animateToPage(
+          0,
+          duration: Duration(milliseconds: 350),
+          curve: Curves.easeIn,
+        );
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,40 +87,40 @@ class _AllPageState extends State<AllPage> {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // Container(
-            //   height: 230,
-            //   decoration: BoxDecoration(
-            //     borderRadius: BorderRadius.circular(10),
-            //   ),
-            //   child: Stack(
-            //     fit: StackFit.expand,
-            //     children: [
-            //       ClipRRect(
-            //         borderRadius: BorderRadius.circular(10),
-            //         child: PageView.builder(
-            //           controller: _pageController,
-            //           itemCount: imageUrls.length,
-            //           itemBuilder: (context, index) {
-            //             return Image.network(imageUrls[index],
-            //                 fit: BoxFit.fill);
-            //           },
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
-            // SizedBox(height: 10),
-            // SmoothPageIndicator(
-            //   controller: _pageController,
-            //   count: imageUrls.length,
-            //   effect: ExpandingDotsEffect(
-            //     dotWidth: 7.0,
-            //     dotHeight: 7.0,
-            //     dotColor: Colors.grey,
-            //     activeDotColor: Color(0xFFE1261C),
-            //   ),
-            // ),
-            // SizedBox(height: 10),
+            Container(
+              height: 230,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: imageUrls.length,
+                      itemBuilder: (context, index) {
+                        return Image.network(imageUrls[index],
+                            fit: BoxFit.fill);
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 10),
+            SmoothPageIndicator(
+              controller: _pageController,
+              count: imageUrls.length,
+              effect: ExpandingDotsEffect(
+                dotWidth: 7.0,
+                dotHeight: 7.0,
+                dotColor: Colors.grey,
+                activeDotColor: Color(0xFFE1261C),
+              ),
+            ),
+            SizedBox(height: 10),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Row(
