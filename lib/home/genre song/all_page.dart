@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 
 import 'all/mpshort_all_page.dart';
 import 'all/mp short/mpshort_page.dart';
-import 'all/popular_all.dart';
+import 'all/tranding_all.dart';
 
 class AllPage extends StatefulWidget {
   const AllPage({super.key});
@@ -86,10 +86,12 @@ class _AllPageState extends State<AllPage> {
     return AnimationLimiter(
       child: SingleChildScrollView(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               height: 230,
               decoration: BoxDecoration(
+                color: Colors.grey.shade900,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Stack(
@@ -110,28 +112,40 @@ class _AllPageState extends State<AllPage> {
               ),
             ),
             SizedBox(height: 10),
-            SmoothPageIndicator(
-              controller: _pageController,
-              count: imageUrls.length,
-              effect: ExpandingDotsEffect(
-                dotWidth: 7.0,
-                dotHeight: 7.0,
-                dotColor: Colors.grey,
-                activeDotColor: Color(0xFFE1261C),
+            Center(
+              child: SmoothPageIndicator(
+                controller: _pageController,
+                count: imageUrls.length,
+                effect: ExpandingDotsEffect(
+                  dotWidth: 7.0,
+                  dotHeight: 7.0,
+                  dotColor: Colors.grey,
+                  activeDotColor: Color(0xFFE1261C),
+                ),
               ),
             ),
             SizedBox(height: 10),
             Container(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    "MpShort",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600),
+                  Container(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Image.asset("assets/images/mp short.png", width: 30),
+                        SizedBox(width: 10),
+                        Text(
+                          "MpShort",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   GestureDetector(
                     onTap: () {
@@ -178,7 +192,7 @@ class _AllPageState extends State<AllPage> {
                 top: 20,
               ),
               child: Text(
-                "Popular",
+                "Tranding",
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
@@ -192,7 +206,7 @@ class _AllPageState extends State<AllPage> {
                 child: SlideAnimation(
                   curve: Curves.decelerate,
                   child: FadeInAnimation(
-                    child: PopularAllPage(),
+                    child: TrandingAllPage(),
                   ),
                 ),
               ),

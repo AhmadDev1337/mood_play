@@ -41,11 +41,9 @@ dependencies:
   flutter_staggered_animations: ^1.1.1
   super_bottom_navigation_bar: ^1.0.0
   iconly: ^1.0.1
-  anim_search_bar: ^2.0.3
   flutter_spinkit: ^5.2.0
   google_fonts: ^5.1.0
   blurrycontainer: ^1.0.2
-  youtube_player_flutter: ^8.1.2
   internet_connectivity_checker: ^1.0.2
   lottie: ^2.6.0
   video_player: ^2.8.2
@@ -60,6 +58,13 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+
+
+  flutter_launcher_icons: ^0.13.1
+flutter_icons:
+  image_path: "assets/images/playstore.png"
+  android: true
+  ios: false
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

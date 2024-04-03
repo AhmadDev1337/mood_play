@@ -87,9 +87,25 @@ class _MpShortAllPageState extends State<MpShortAllPage> {
                               ),
                             );
                           },
-                          child: Image.network(
-                            songs[index]['logoUrl'],
+                          child: Container(
                             width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(250),
+                              color: Colors.grey.shade900,
+                            ),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(250),
+                                  child: Image.network(
+                                    songs[index]['logoUrl'],
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                         SizedBox(width: 10),
@@ -97,13 +113,13 @@ class _MpShortAllPageState extends State<MpShortAllPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              songs[index]['title'],
+                              songs[index]['name'],
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.w600),
                             ),
                             Text(
-                              songs[index]['name'],
+                              songs[index]['title'],
                               style: TextStyle(color: Colors.white),
                             ),
                           ],
@@ -221,7 +237,7 @@ class _DetailPageState extends State<DetailPage> {
                             MaterialPageRoute(
                               builder: (context) => VideoPlayerPage(
                                   videoUrl: widget.detail[index]
-                                      ['videoUrlAccount']),
+                                      ['videoUrlSong']),
                             ),
                           );
                         },
@@ -233,7 +249,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  filteredData[index]['fotoAccount'],
+                                  filteredData[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -252,18 +268,10 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 2,
+                                    height: 5,
                                   ),
                                   Text(
-                                    filteredData[index]['titleAccount'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  Text(
-                                    filteredData[index]['titleAccount'],
-                                    overflow: TextOverflow.ellipsis,
+                                    filteredData[index]['titleSong'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,

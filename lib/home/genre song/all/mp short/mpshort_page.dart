@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -42,10 +41,10 @@ class _MpShortPageState extends State<MpShortPage> {
     }
   }
 
-  List<dynamic> filterDataByTitle(String searchText) {
+  List<dynamic> filterDataByName(String searchText) {
     return songs.where((data) {
-      String title = data['title'].toLowerCase();
-      return title.contains(searchText.toLowerCase());
+      String name = data['name'].toLowerCase();
+      return name.contains(searchText.toLowerCase());
     }).toList();
   }
 
@@ -133,7 +132,7 @@ class _MpShortPageState extends State<MpShortPage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: List.generate(
-                          filterDataByTitle(searchText).length,
+                          filterDataByName(searchText).length,
                           (index) => GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -152,7 +151,7 @@ class _MpShortPageState extends State<MpShortPage> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
                                     child: Image.network(
-                                      filterDataByTitle(searchText)[index]
+                                      filterDataByName(searchText)[index]
                                           ['imgUrl'],
                                       fit: BoxFit.cover,
                                     ),
@@ -171,17 +170,35 @@ class _MpShortPageState extends State<MpShortPage> {
                                               MaterialPageRoute(
                                                 builder: (context) =>
                                                     DetailPage(
-                                                  detail: filterDataByTitle(
+                                                  detail: filterDataByName(
                                                           searchText)[index]
                                                       ['detailPage'],
                                                 ),
                                               ),
                                             );
                                           },
-                                          child: Image.network(
-                                            filterDataByTitle(searchText)[index]
-                                                ['logoUrl'],
+                                          child: Container(
                                             width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(250),
+                                              color: Colors.grey.shade900,
+                                            ),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          250),
+                                                  child: Image.network(
+                                                    songs[index]['logoUrl'],
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -190,15 +207,15 @@ class _MpShortPageState extends State<MpShortPage> {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              filterDataByTitle(
-                                                  searchText)[index]['title'],
+                                              filterDataByName(
+                                                  searchText)[index]['name'],
                                               style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.w600),
                                             ),
                                             Text(
-                                              filterDataByTitle(
-                                                  searchText)[index]['name'],
+                                              filterDataByName(
+                                                  searchText)[index]['title'],
                                               style: TextStyle(
                                                   color: Colors.white),
                                             ),
@@ -325,7 +342,7 @@ class _DetailPageState extends State<DetailPage> {
                             MaterialPageRoute(
                               builder: (context) => VideoPlayerPage(
                                   videoUrl: widget.detail[index]
-                                      ['videoUrlAccount']),
+                                      ['videoUrlSong']),
                             ),
                           );
                         },
@@ -337,7 +354,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  filteredData[index]['fotoAccount'],
+                                  filteredData[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -356,18 +373,10 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 2,
+                                    height: 5,
                                   ),
                                   Text(
-                                    filteredData[index]['titleAccount'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  Text(
-                                    filteredData[index]['titleAccount'],
-                                    overflow: TextOverflow.ellipsis,
+                                    filteredData[index]['titleSong'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,

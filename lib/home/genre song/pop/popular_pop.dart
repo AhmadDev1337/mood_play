@@ -85,8 +85,26 @@ class _PopularPopPageState extends State<PopularPopPage> {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Row(
                           children: [
-                            Image.network(pops[index]['logoUrl'],
-                                width: 40, height: 40),
+                            Container(
+                              width: 40,
+                              height: 40,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(250),
+                                color: Colors.grey.shade900,
+                              ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(250),
+                                    child: Image.network(
+                                      pops[index]['logoUrl'],
+                                      fit: BoxFit.fill,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                             SizedBox(
                               width: 20,
                             ),
@@ -94,7 +112,7 @@ class _PopularPopPageState extends State<PopularPopPage> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  pops[index]['name'],
+                                  pops[index]['title'],
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.w800,
@@ -140,10 +158,10 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
 
-  List<dynamic> filterDataByName(String searchText) {
+  List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
-      String name = data['nameAccount'].toLowerCase();
-      return name.contains(searchText.toLowerCase());
+      String title = data['titleSong'].toLowerCase();
+      return title.contains(searchText.toLowerCase());
     }).toList();
   }
 
@@ -216,9 +234,9 @@ class _DetailPageState extends State<DetailPage> {
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: filterDataByName(searchText).length,
+                itemCount: filterDataByTitle(searchText).length,
                 itemBuilder: (BuildContext context, int index) {
-                  var filteredData = filterDataByName(searchText);
+                  var filteredData = filterDataByTitle(searchText);
                   return Column(
                     children: [
                       GestureDetector(
@@ -228,7 +246,7 @@ class _DetailPageState extends State<DetailPage> {
                             MaterialPageRoute(
                               builder: (context) => VideoPlayerPage(
                                   videoUrl: widget.detail[index]
-                                      ['videoUrlAccount']),
+                                      ['videoUrlSong']),
                             ),
                           );
                         },
@@ -240,7 +258,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  filteredData[index]['fotoAccount'],
+                                  filteredData[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -251,7 +269,7 @@ class _DetailPageState extends State<DetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    filteredData[index]['nameAccount'],
+                                    filteredData[index]['titleSong'],
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800,
@@ -259,18 +277,10 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 2,
+                                    height: 5,
                                   ),
                                   Text(
-                                    filteredData[index]['titleAccount'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  Text(
-                                    filteredData[index]['titleAccount'],
-                                    overflow: TextOverflow.ellipsis,
+                                    filteredData[index]['nameAccount'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,

@@ -25,10 +25,6 @@ class _BarControllerState extends State<BarController> {
     "All",
     "Pop",
     "Classic",
-    "Rock",
-    "Hip Hop",
-    "Jazz",
-    "R&B",
   ];
 
   @override
@@ -60,36 +56,37 @@ class _BarControllerState extends State<BarController> {
                   SizedBox(height: 15),
                   SizedBox(
                     height: 30,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      physics: BouncingScrollPhysics(),
-                      itemCount: items.length,
-                      itemBuilder: (context, index) {
-                        return Container(
-                          margin: EdgeInsets.symmetric(horizontal: 5),
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            border: Border.all(
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 10),
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        physics: BouncingScrollPhysics(),
+                        itemCount: items.length,
+                        itemBuilder: (context, index) {
+                          return Container(
+                            margin: EdgeInsets.symmetric(horizontal: 5),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 15, vertical: 5),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
                               color: currentPageIndex == index
                                   ? Colors.white
-                                  : Colors.grey,
+                                  : Colors.grey.shade900,
                             ),
-                          ),
-                          child: Center(
-                            child: Text(
-                              items[index],
-                              style: TextStyle(
-                                  color: currentPageIndex == index
-                                      ? Colors.white
-                                      : Colors.grey,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold),
+                            child: Center(
+                              child: Text(
+                                items[index],
+                                style: TextStyle(
+                                    color: currentPageIndex == index
+                                        ? Colors.grey.shade900
+                                        : Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
                   ),
                   SizedBox(height: 15),
@@ -122,16 +119,8 @@ class _BarControllerState extends State<BarController> {
       content = AllPage();
     } else if (item == "Pop") {
       content = PopPage();
-    } else if (item == "Classic") {
-      content = ClassicPage();
-    } else if (item == "Rock") {
-      content = RockPage();
-    } else if (item == "Hip Hop") {
-      content = HipHopPage();
-    } else if (item == "Jazz") {
-      content = JazzPage();
     } else {
-      content = RnBPage();
+      content = ClassicPage();
     }
 
     return ListView(

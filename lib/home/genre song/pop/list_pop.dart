@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:anim_search_bar/anim_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
@@ -20,7 +19,7 @@ class ListPopPage extends StatefulWidget {
 }
 
 class _ListPopPageState extends State<ListPopPage> {
-  late List<dynamic> songs = [];
+  late List<dynamic> pops = [];
 
   String searchText = '';
 
@@ -32,10 +31,10 @@ class _ListPopPageState extends State<ListPopPage> {
 
   fetchData() async {
     final response =
-        await http.get(Uri.parse('https://pastebin.com/raw/4mWhQ70i'));
+        await http.get(Uri.parse('https://pastebin.com/raw/YPc246hg'));
     if (response.statusCode == 200) {
       setState(() {
-        songs = json.decode(response.body)['songs'];
+        pops = json.decode(response.body)['pops'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -43,7 +42,7 @@ class _ListPopPageState extends State<ListPopPage> {
   }
 
   List<dynamic> filterDataByName(String searchText) {
-    return songs.where((data) {
+    return pops.where((data) {
       String name = data['name'].toLowerCase();
       return name.contains(searchText.toLowerCase());
     }).toList();
@@ -164,10 +163,28 @@ class _ListPopPageState extends State<ListPopPage> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Image.network(
-                                          filterDataByName(searchText)[index]
-                                              ['logoUrl'],
+                                        Container(
                                           width: 40,
+                                          height: 40,
+                                          decoration: BoxDecoration(
+                                            borderRadius:
+                                                BorderRadius.circular(250),
+                                            color: Colors.grey.shade900,
+                                          ),
+                                          child: Stack(
+                                            fit: StackFit.expand,
+                                            children: [
+                                              ClipRRect(
+                                                borderRadius:
+                                                    BorderRadius.circular(250),
+                                                child: Image.network(
+                                                  filterDataByName(searchText)[
+                                                      index]['logoUrl'],
+                                                  fit: BoxFit.fill,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                         SizedBox(width: 10),
                                         Column(
@@ -176,16 +193,11 @@ class _ListPopPageState extends State<ListPopPage> {
                                           children: [
                                             Text(
                                               filterDataByName(
-                                                  searchText)[index]['title'],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600),
-                                            ),
-                                            Text(
-                                              filterDataByName(
                                                   searchText)[index]['name'],
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                  color: Colors.white,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w600),
                                             ),
                                           ],
                                         ),
@@ -222,10 +234,10 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
 
-  List<dynamic> filterDataByName(String searchText) {
+  List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
-      String name = data['nameAccount'].toLowerCase();
-      return name.contains(searchText.toLowerCase());
+      String title = data['titleSong'].toLowerCase();
+      return title.contains(searchText.toLowerCase());
     }).toList();
   }
 
@@ -298,9 +310,9 @@ class _DetailPageState extends State<DetailPage> {
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: filterDataByName(searchText).length,
+                itemCount: filterDataByTitle(searchText).length,
                 itemBuilder: (BuildContext context, int index) {
-                  var filteredData = filterDataByName(searchText);
+                  var filteredData = filterDataByTitle(searchText);
                   return Column(
                     children: [
                       GestureDetector(
@@ -310,7 +322,7 @@ class _DetailPageState extends State<DetailPage> {
                             MaterialPageRoute(
                               builder: (context) => VideoPlayerPage(
                                   videoUrl: widget.detail[index]
-                                      ['videoUrlAccount']),
+                                      ['videoUrlSong']),
                             ),
                           );
                         },
@@ -322,7 +334,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  filteredData[index]['fotoAccount'],
+                                  filteredData[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -333,7 +345,7 @@ class _DetailPageState extends State<DetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    filteredData[index]['nameAccount'],
+                                    filteredData[index]['titleSong'],
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800,
@@ -341,18 +353,10 @@ class _DetailPageState extends State<DetailPage> {
                                     ),
                                   ),
                                   SizedBox(
-                                    height: 2,
+                                    height: 5,
                                   ),
                                   Text(
-                                    filteredData[index]['titleAccount'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                  Text(
-                                    filteredData[index]['titleAccount'],
-                                    overflow: TextOverflow.ellipsis,
+                                    filteredData[index]['nameAccount'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,

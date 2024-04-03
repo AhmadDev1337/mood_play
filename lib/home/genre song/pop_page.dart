@@ -5,6 +5,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import 'pop/Kpop/kpop_album.dart';
 import 'pop/Kpop/profile_page.dart';
+import 'pop/list_pop.dart';
 import 'pop/popular_pop.dart';
 
 class JsonData {
@@ -105,13 +106,20 @@ class _PopPageState extends State<PopPage> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ListPopPage(),
+                        ),
+                      );
+                    },
                     child: Text(
-                      "...",
+                      "more",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: Colors.grey,
                         fontWeight: FontWeight.w600,
-                        fontSize: 20,
+                        fontSize: 15,
                       ),
                     ),
                   ),
