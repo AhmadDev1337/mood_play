@@ -10,12 +10,12 @@ import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
-class TrandingAllPage extends StatefulWidget {
+class LoFiPage extends StatefulWidget {
   @override
-  _TrandingAllPageState createState() => _TrandingAllPageState();
+  _LoFiPageState createState() => _LoFiPageState();
 }
 
-class _TrandingAllPageState extends State<TrandingAllPage> {
+class _LoFiPageState extends State<LoFiPage> {
   List<dynamic> trands = [];
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
@@ -146,30 +146,15 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                                 ),
                               ),
                               SizedBox(
-                                width: 20,
+                                width: 15,
                               ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    trands[index]['title'],
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(
-                                    trands[index]['name'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ],
+                              Text(
+                                trands[index]['name'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 18,
+                                ),
                               ),
                             ],
                           ),
@@ -247,30 +232,15 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                             ),
                           ),
                           SizedBox(
-                            width: 20,
+                            width: 15,
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                trands[index]['title'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 20,
-                                ),
-                              ),
-                              SizedBox(
-                                height: 2,
-                              ),
-                              Text(
-                                trands[index]['name'],
-                                style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 10,
-                                ),
-                              ),
-                            ],
+                          Text(
+                            trands[index]['name'],
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 18,
+                            ),
                           ),
                         ],
                       ),

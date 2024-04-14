@@ -1,8 +1,11 @@
+// ignore_for_file: prefer_const_constructors
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'genre song/all_page.dart';
 import 'genre song/classic_page.dart';
+import 'genre song/lo-fi_page.dart';
 import 'genre song/pop_page.dart';
 
 class BarController extends StatefulWidget {
@@ -20,6 +23,7 @@ class _BarControllerState extends State<BarController> {
     "All",
     "Pop",
     "Classic",
+    "Lo-Fi",
   ];
 
   @override
@@ -141,6 +145,8 @@ class _BarControllerState extends State<BarController> {
         return PopPage();
       case 2:
         return ClassicPage();
+      case 3:
+        return LoFiPage();
       default:
         return Container();
     }

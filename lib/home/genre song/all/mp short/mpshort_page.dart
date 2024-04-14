@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -22,11 +23,40 @@ class _MpShortPageState extends State<MpShortPage> {
   late List<dynamic> songs = [];
 
   String searchText = '';
+  late List<BannerAd> _bannerAds;
+  int _currentAdIndex = 0;
+
+  void _loadBannerAds() {
+    _bannerAds = List<BannerAd>.generate(5, (index) {
+      final adUnitIds = [
+        'ca-app-pub-8363980854824352/5006742410',
+        'ca-app-pub-8363980854824352/4374185583',
+        'ca-app-pub-8363980854824352/3554059947',
+        'ca-app-pub-8363980854824352/2568281338',
+        'ca-app-pub-8363980854824352/8005791919'
+      ];
+      return BannerAd(
+        adUnitId: adUnitIds[index],
+        request: AdRequest(),
+        size: AdSize.mediumRectangle,
+        listener: BannerAdListener(
+          onAdLoaded: (Ad ad) {
+            log('Ad onAdLoaded');
+          },
+          onAdFailedToLoad: (Ad ad, LoadAdError err) {
+            log('Ad onAdFailedToLoad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      )..load();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    _loadBannerAds();
   }
 
   fetchData() async {
@@ -132,102 +162,124 @@ class _MpShortPageState extends State<MpShortPage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: List.generate(
-                          filterDataByName(searchText).length,
-                          (index) => GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VideoPlayerPage(
-                                      videoUrl: songs[index]['videoUrl']),
-                                ),
+                          filterDataByName(searchText).length < 100
+                              ? songs.length
+                              : 100,
+                          (index) {
+                            if (index % 5 == 4) {
+                              final ad = _bannerAds[_currentAdIndex];
+                              _currentAdIndex =
+                                  (_currentAdIndex + 1) % _bannerAds.length;
+                              return Container(
+                                height: 50,
+                                child: AdWidget(ad: ad),
                               );
-                            },
-                            child: Container(
-                              width: MediaQuery.of(context).size.width * 0.4,
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: Image.network(
-                                      filterDataByName(searchText)[index]
-                                          ['imgUrl'],
-                                      fit: BoxFit.cover,
+                            } else {
+                              int realIndex = index ~/ 1;
+
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoPlayerPage(
+                                          videoUrl: songs[realIndex]
+                                              ['videoUrl']),
                                     ),
-                                  ),
-                                  Positioned(
-                                    bottom: 10,
-                                    left: 10,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (context) =>
-                                                    DetailPage(
-                                                  detail: filterDataByName(
-                                                          searchText)[index]
-                                                      ['detailPage'],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          child: Container(
-                                            width: 40,
-                                            height: 40,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(250),
-                                              color: Colors.grey.shade900,
-                                            ),
-                                            child: Stack(
-                                              fit: StackFit.expand,
-                                              children: [
-                                                ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          250),
-                                                  child: Image.network(
-                                                    songs[index]['logoUrl'],
-                                                    fit: BoxFit.fill,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                  );
+                                },
+                                child: Container(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.4,
+                                  child: Stack(
+                                    fit: StackFit.expand,
+                                    children: [
+                                      ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
+                                          filterDataByName(
+                                              searchText)[realIndex]['imgUrl'],
+                                          fit: BoxFit.cover,
                                         ),
-                                        SizedBox(width: 10),
-                                        Column(
+                                      ),
+                                      Positioned(
+                                        bottom: 10,
+                                        left: 10,
+                                        child: Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
                                           children: [
-                                            Text(
-                                              filterDataByName(
-                                                  searchText)[index]['name'],
-                                              style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600),
+                                            GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        DetailPage(
+                                                      detail: filterDataByName(
+                                                                  searchText)[
+                                                              realIndex]
+                                                          ['detailPage'],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                              child: Container(
+                                                width: 40,
+                                                height: 40,
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          250),
+                                                  color: Colors.grey.shade900,
+                                                ),
+                                                child: Stack(
+                                                  fit: StackFit.expand,
+                                                  children: [
+                                                    ClipRRect(
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              250),
+                                                      child: Image.network(
+                                                        songs[realIndex]
+                                                            ['logoUrl'],
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
-                                            Text(
-                                              filterDataByName(
-                                                  searchText)[index]['title'],
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                            SizedBox(width: 10),
+                                            Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Text(
+                                                  filterDataByName(searchText)[
+                                                      realIndex]['name'],
+                                                  style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontWeight:
+                                                          FontWeight.w600),
+                                                ),
+                                                Text(
+                                                  filterDataByName(searchText)[
+                                                      realIndex]['title'],
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                            ),
-                          ),
+                                ),
+                              );
+                            }
+                          },
                         ),
                       ),
                     ),
