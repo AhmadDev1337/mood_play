@@ -1,18 +1,12 @@
-// ignore_for_file: prefer_const_constructors, avoid_unnecessary_containers, prefer_const_literals_to_create_immutables
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'genre song/all_page.dart';
 import 'genre song/classic_page.dart';
-import 'genre song/hiphop_page.dart';
-import 'genre song/jazz_page.dart';
 import 'genre song/pop_page.dart';
-import 'genre song/rnb_page.dart';
-import 'genre song/rock_page.dart';
 
 class BarController extends StatefulWidget {
-  const BarController({super.key});
+  const BarController({Key? key}) : super(key: key);
 
   @override
   State<BarController> createState() => _BarControllerState();
@@ -20,12 +14,25 @@ class BarController extends StatefulWidget {
 
 class _BarControllerState extends State<BarController> {
   int currentPageIndex = 0;
+  late PageController _pageController;
 
   final List<String> items = [
     "All",
     "Pop",
     "Classic",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: currentPageIndex);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +70,37 @@ class _BarControllerState extends State<BarController> {
                         physics: BouncingScrollPhysics(),
                         itemCount: items.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(horizontal: 5),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15, vertical: 5),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: currentPageIndex == index
-                                  ? Colors.white
-                                  : Colors.grey.shade900,
-                            ),
-                            child: Center(
-                              child: Text(
-                                items[index],
-                                style: TextStyle(
-                                    color: currentPageIndex == index
-                                        ? Colors.grey.shade900
-                                        : Colors.white,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold),
+                          return GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                currentPageIndex = index;
+                              });
+                              _pageController.animateToPage(
+                                index,
+                                duration: Duration(milliseconds: 500),
+                                curve: Curves.ease,
+                              );
+                            },
+                            child: Container(
+                              margin: EdgeInsets.symmetric(horizontal: 5),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 15, vertical: 5),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                color: currentPageIndex == index
+                                    ? Colors.white
+                                    : Colors.grey.shade900,
+                              ),
+                              child: Center(
+                                child: Text(
+                                  items[index],
+                                  style: TextStyle(
+                                      color: currentPageIndex == index
+                                          ? Colors.grey.shade900
+                                          : Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                ),
                               ),
                             ),
                           );
@@ -92,6 +111,7 @@ class _BarControllerState extends State<BarController> {
                   SizedBox(height: 15),
                   Expanded(
                     child: PageView.builder(
+                      controller: _pageController,
                       physics: BouncingScrollPhysics(),
                       itemCount: items.length,
                       onPageChanged: (index) {
@@ -100,7 +120,7 @@ class _BarControllerState extends State<BarController> {
                         });
                       },
                       itemBuilder: (context, index) {
-                        return buildItemPage(items[index]);
+                        return buildItemPage(index);
                       },
                     ),
                   ),
@@ -113,22 +133,16 @@ class _BarControllerState extends State<BarController> {
     );
   }
 
-  Widget buildItemPage(String item) {
-    Widget content;
-    if (item == "All") {
-      content = AllPage();
-    } else if (item == "Pop") {
-      content = PopPage();
-    } else {
-      content = ClassicPage();
+  Widget buildItemPage(int index) {
+    switch (index) {
+      case 0:
+        return AllPage();
+      case 1:
+        return PopPage();
+      case 2:
+        return ClassicPage();
+      default:
+        return Container();
     }
-
-    return ListView(
-      scrollDirection: Axis.vertical,
-      physics: BouncingScrollPhysics(),
-      children: [
-        content,
-      ],
-    );
   }
 }
