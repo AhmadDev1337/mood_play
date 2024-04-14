@@ -108,6 +108,21 @@ class _AllPageState extends State<AllPage> {
                       },
                     ),
                   ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.grey,
+                      ),
+                      child: Text(
+                        "Advertisement",
+                        style: TextStyle(color: Colors.white, fontSize: 11),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
