@@ -45,18 +45,18 @@ class _RockPageState extends State<RockPage> {
         physics: BouncingScrollPhysics(),
         children: List.generate(
           pops.length < 15 ? pops.length : 15,
-          (index) => Column(
-            children: [
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DetailPage(
-                                detail: pops[index]['detailPage'],
-                              )));
-                    },
-                    child: Padding(
+          (index) => GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                        detail: pops[index]['detailPage'],
+                      )));
+            },
+            child: Column(
+              children: [
+                Column(
+                  children: [
+                    Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
@@ -92,10 +92,10 @@ class _RockPageState extends State<RockPage> {
                         ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),

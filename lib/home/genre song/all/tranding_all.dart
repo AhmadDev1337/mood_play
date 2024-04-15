@@ -17,6 +17,7 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
   List<dynamic> trands = [];
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
+  bool _adsLoaded = false;
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(20, (index) {
@@ -49,6 +50,9 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
         listener: BannerAdListener(
           onAdLoaded: (Ad ad) {
             log('Ad onAdLoaded');
+            setState(() {
+              _adsLoaded = true;
+            });
           },
           onAdFailedToLoad: (Ad ad, LoadAdError err) {
             log('Ad onAdFailedToLoad: ${err.message}');
@@ -193,10 +197,12 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Container(
-                  height: 50,
-                  child: AdWidget(ad: ad),
-                ),
+                _adsLoaded
+                    ? Container(
+                        height: 50,
+                        child: AdWidget(ad: ad),
+                      )
+                    : SizedBox(height: 50), // Placeholder for Ad
                 SizedBox(height: 10),
               ],
             );

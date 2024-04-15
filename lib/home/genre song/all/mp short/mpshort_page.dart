@@ -23,6 +23,24 @@ class _MpShortPageState extends State<MpShortPage> {
   String searchText = '';
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/1883021094',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(5, (index) {
@@ -55,6 +73,7 @@ class _MpShortPageState extends State<MpShortPage> {
     super.initState();
     fetchData();
     _loadBannerAds();
+    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -209,6 +228,7 @@ class _MpShortPageState extends State<MpShortPage> {
                                           children: [
                                             GestureDetector(
                                               onTap: () {
+                                                _loadInterstitialAd();
                                                 Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
@@ -472,10 +492,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      allowFullScreen: true,
+      fullScreenByDefault: true,
       allowMuting: true,
       autoPlay: true,
       looping: true,
+      zoomAndPan: true,
     );
   }
 
