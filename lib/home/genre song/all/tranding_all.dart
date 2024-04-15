@@ -1,10 +1,8 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sized_box_for_whitespace, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
-
-import 'dart:async';
 import 'dart:developer';
 
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
@@ -471,58 +469,27 @@ class VideoPlayerPage extends StatefulWidget {
 }
 
 class _VideoPlayerPageState extends State<VideoPlayerPage> {
-  late VideoPlayerController _controller;
-  double _currentSliderValue = 0.0;
-  bool _showControls = true;
-  late Timer _hideControlsTimer;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
 
   @override
   void initState() {
     super.initState();
-    _controller = VideoPlayerController.network(widget.videoUrl)
-      ..initialize().then((_) {
-        setState(() {});
-      });
-    _hideControlsTimer = Timer(Duration(seconds: 3), () {
-      setState(() {
-        _showControls = false;
-      });
-    });
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      allowFullScreen: true,
+      allowMuting: true,
+      autoPlay: true,
+      looping: true,
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
-    _controller.dispose();
-    _hideControlsTimer.cancel();
-  }
-
-  void _togglePlayPause() {
-    setState(() {
-      if (_controller.value.isPlaying) {
-        _controller.pause();
-      } else {
-        _controller.play();
-        _startHideControlsTimer();
-      }
-      _showControls = true;
-    });
-  }
-
-  void _startHideControlsTimer() {
-    _hideControlsTimer.cancel();
-    _hideControlsTimer = Timer(Duration(seconds: 3), () {
-      setState(() {
-        _showControls = false;
-      });
-    });
-  }
-
-  String _formatDuration(Duration duration) {
-    String twoDigits(int n) => n.toString().padLeft(2, "0");
-    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
-    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
-    return "$twoDigitMinutes:$twoDigitSeconds";
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
   }
 
   @override
@@ -530,128 +497,9 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return Scaffold(
       backgroundColor: Color(0xff0d0d0d),
       body: Center(
-        child: Stack(
-          alignment: Alignment.center,
-          children: [
-            _controller.value.isInitialized
-                ? AspectRatio(
-                    aspectRatio: _controller.value.aspectRatio,
-                    child: VideoPlayer(_controller),
-                  )
-                : SpinKitWave(
-                    color: Color(0xFFE1261C),
-                    size: 25,
-                  ),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _showControls = !_showControls;
-                  if (_showControls && !_controller.value.isPlaying) {
-                    _startHideControlsTimer();
-                  }
-                });
-              },
-              child: AnimatedOpacity(
-                duration: Duration(milliseconds: 300),
-                opacity: _showControls ? 1.0 : 0.0,
-                child: Container(
-                  color: Colors.transparent,
-                  height: double.infinity,
-                  width: double.infinity,
-                ),
-              ),
-            ),
-            AnimatedOpacity(
-              duration: Duration(milliseconds: 300),
-              opacity: _showControls ? 1.0 : 0.0,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Slider(
-                        activeColor: Color(0xFFE1261C),
-                        value: _currentSliderValue,
-                        min: 0.0,
-                        max: _controller.value.duration.inSeconds.toDouble(),
-                        onChanged: (value) {
-                          setState(() {
-                            _currentSliderValue = value;
-                          });
-                          _controller.seekTo(Duration(seconds: value.toInt()));
-                        },
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            _formatDuration(_controller.value.position),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          ),
-                          Text(
-                            _formatDuration(_controller.value.duration),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 10,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    opacity: _showControls ? 1.0 : 0.0,
-                    child: Icon(
-                      Icons.arrow_back,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: _togglePlayPause,
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    opacity: _showControls ? 1.0 : 0.0,
-                    child: Icon(
-                      _controller.value.isPlaying
-                          ? Icons.pause
-                          : Icons.play_arrow,
-                      color: Colors.white,
-                      size: 50,
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: AnimatedOpacity(
-                    duration: Duration(milliseconds: 300),
-                    opacity: _showControls ? 1.0 : 0.0,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+          child: Chewie(
+        controller: _chewieController,
+      )),
     );
   }
 }

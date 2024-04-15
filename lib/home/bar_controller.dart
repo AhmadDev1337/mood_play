@@ -7,6 +7,7 @@ import 'genre song/all_page.dart';
 import 'genre song/classic_page.dart';
 import 'genre song/lo-fi_page.dart';
 import 'genre song/pop_page.dart';
+import 'genre song/rock_page.dart';
 
 class BarController extends StatefulWidget {
   const BarController({Key? key}) : super(key: key);
@@ -24,6 +25,7 @@ class _BarControllerState extends State<BarController> {
     "Pop",
     "Classic",
     "Lo-Fi",
+    "Rock",
   ];
 
   @override
@@ -147,6 +149,8 @@ class _BarControllerState extends State<BarController> {
         return ClassicPage();
       case 3:
         return LoFiPage();
+      case 4:
+        return RockPage();
       default:
         return Container();
     }
