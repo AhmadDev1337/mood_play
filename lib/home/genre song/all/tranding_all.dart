@@ -21,13 +21,28 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
   int _currentAdIndex = 0;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(5, (index) {
+    _bannerAds = List<BannerAd>.generate(20, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/5006742410',
         'ca-app-pub-8363980854824352/4374185583',
         'ca-app-pub-8363980854824352/3554059947',
         'ca-app-pub-8363980854824352/2568281338',
-        'ca-app-pub-8363980854824352/8005791919'
+        'ca-app-pub-8363980854824352/8005791919',
+        'ca-app-pub-8363980854824352/7231249377',
+        'ca-app-pub-8363980854824352/6544019519',
+        'ca-app-pub-8363980854824352/4953604232',
+        'ca-app-pub-8363980854824352/4012057658',
+        'ca-app-pub-8363980854824352/5213458689',
+        'ca-app-pub-8363980854824352/4173841197',
+        'ca-app-pub-8363980854824352/2860759529',
+        'ca-app-pub-8363980854824352/2587295344',
+        'ca-app-pub-8363980854824352/7388195883',
+        'ca-app-pub-8363980854824352/6075114211',
+        'ca-app-pub-8363980854824352/4634357266',
+        'ca-app-pub-8363980854824352/1274213678',
+        'ca-app-pub-8363980854824352/3321275598',
+        'ca-app-pub-8363980854824352/7151358324',
+        'ca-app-pub-8363980854824352/2008193923'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -80,7 +95,7 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: trands.length < 100 ? trands.length : 100,
+        itemCount: trands.length < 40 ? trands.length : 40,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];

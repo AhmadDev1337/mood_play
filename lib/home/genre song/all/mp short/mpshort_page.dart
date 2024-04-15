@@ -163,10 +163,10 @@ class _MpShortPageState extends State<MpShortPage> {
                         physics: NeverScrollableScrollPhysics(),
                         children: List.generate(
                           filterDataByName(searchText).length < 100
-                              ? songs.length
+                              ? filterDataByName(searchText).length
                               : 100,
                           (index) {
-                            if (index % 5 == 4) {
+                            if ((index + 1) % 5 == 0) {
                               final ad = _bannerAds[_currentAdIndex];
                               _currentAdIndex =
                                   (_currentAdIndex + 1) % _bannerAds.length;
@@ -176,14 +176,14 @@ class _MpShortPageState extends State<MpShortPage> {
                               );
                             } else {
                               int realIndex = index ~/ 1;
-
                               return GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
                                       builder: (context) => VideoPlayerPage(
-                                          videoUrl: songs[realIndex]
+                                          videoUrl: filterDataByName(
+                                                  searchText)[realIndex]
                                               ['videoUrl']),
                                     ),
                                   );
@@ -241,7 +241,9 @@ class _MpShortPageState extends State<MpShortPage> {
                                                           BorderRadius.circular(
                                                               250),
                                                       child: Image.network(
-                                                        songs[realIndex]
+                                                        filterDataByName(
+                                                                    searchText)[
+                                                                realIndex]
                                                             ['logoUrl'],
                                                         fit: BoxFit.fill,
                                                       ),
