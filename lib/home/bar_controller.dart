@@ -5,8 +5,11 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'genre song/all_page.dart';
 import 'genre song/classic_page.dart';
+import 'genre song/hiphop_page.dart';
+import 'genre song/jazz_page.dart';
 import 'genre song/lo-fi_page.dart';
 import 'genre song/pop_page.dart';
+import 'genre song/rnb_page.dart';
 import 'genre song/rock_page.dart';
 
 class BarController extends StatefulWidget {
@@ -26,6 +29,9 @@ class _BarControllerState extends State<BarController> {
     "Classic",
     "Lo-Fi",
     "Rock",
+    "Hip-Hop",
+    "RnB",
+    "Jazz",
   ];
 
   @override
@@ -151,6 +157,12 @@ class _BarControllerState extends State<BarController> {
         return LoFiPage();
       case 4:
         return RockPage();
+      case 5:
+        return HipHopPage();
+      case 6:
+        return RnBPage();
+      case 7:
+        return JazzPage();
       default:
         return Container();
     }
