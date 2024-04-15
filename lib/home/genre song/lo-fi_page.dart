@@ -1,4 +1,4 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sized_box_for_whitespace, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sized_box_for_whitespace, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use, prefer_final_fields
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -17,6 +17,7 @@ class _LoFiPageState extends State<LoFiPage> {
   List<dynamic> trands = [];
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
+  bool _adsLoaded = false;
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(10, (index) {
@@ -159,10 +160,12 @@ class _LoFiPageState extends State<LoFiPage> {
                   ),
                 ),
                 SizedBox(height: 10),
-                Container(
-                  height: 50,
-                  child: AdWidget(ad: ad),
-                ),
+                _adsLoaded
+                    ? Container(
+                        height: 50,
+                        child: AdWidget(ad: ad),
+                      )
+                    : SizedBox(height: 50),
                 SizedBox(height: 10),
               ],
             );

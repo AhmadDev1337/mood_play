@@ -1,4 +1,4 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, avoid_unnecessary_containers, library_private_types_in_public_api, deprecated_member_use
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sized_box_for_whitespace, use_key_in_widget_constructors, prefer_const_constructors_in_immutables, avoid_unnecessary_containers, library_private_types_in_public_api, deprecated_member_use, prefer_final_fields
 
 import 'dart:convert';
 import 'dart:developer';
@@ -24,6 +24,7 @@ class _MpShortPageState extends State<MpShortPage> {
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   InterstitialAd? _interstitialAd;
+  bool _adsLoaded = false;
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
@@ -187,10 +188,12 @@ class _MpShortPageState extends State<MpShortPage> {
                               final ad = _bannerAds[_currentAdIndex];
                               _currentAdIndex =
                                   (_currentAdIndex + 1) % _bannerAds.length;
-                              return Container(
-                                height: 50,
-                                child: AdWidget(ad: ad),
-                              );
+                              return _adsLoaded
+                                  ? Container(
+                                      height: 50,
+                                      child: AdWidget(ad: ad),
+                                    )
+                                  : SizedBox(height: 50);
                             } else {
                               int realIndex = index ~/ 1;
                               return GestureDetector(
