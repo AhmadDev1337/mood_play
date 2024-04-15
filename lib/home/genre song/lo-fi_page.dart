@@ -14,7 +14,7 @@ class LoFiPage extends StatefulWidget {
 }
 
 class _LoFiPageState extends State<LoFiPage> {
-  List<dynamic> trands = [];
+  List<dynamic> lofi = [];
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   bool _adsLoaded = false;
@@ -59,10 +59,10 @@ class _LoFiPageState extends State<LoFiPage> {
 
   fetchData() async {
     final response =
-        await http.get(Uri.parse('https://pastebin.com/raw/FigS0r5G'));
+        await http.get(Uri.parse('https://pastebin.com/raw/wyPuLqFx'));
     if (response.statusCode == 200) {
       setState(() {
-        trands = json.decode(response.body)['trands'];
+        lofi = json.decode(response.body)['lofi'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -84,7 +84,7 @@ class _LoFiPageState extends State<LoFiPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: trands.length < 20 ? trands.length : 20,
+        itemCount: lofi.length < 20 ? lofi.length : 20,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
@@ -95,7 +95,7 @@ class _LoFiPageState extends State<LoFiPage> {
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => VideoPlayerPage(
-                        videoUrl: trands[index]['videoUrl'],
+                        videoUrl: lofi[index]['videoUrl'],
                       ),
                     ));
                   },
@@ -109,7 +109,7 @@ class _LoFiPageState extends State<LoFiPage> {
                             ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: Image.network(
-                                trands[index]['imgUrl'],
+                                lofi[index]['imgUrl'],
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -134,7 +134,7 @@ class _LoFiPageState extends State<LoFiPage> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(250),
                                     child: Image.network(
-                                      trands[index]['logoUrl'],
+                                      lofi[index]['logoUrl'],
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -145,7 +145,7 @@ class _LoFiPageState extends State<LoFiPage> {
                               width: 15,
                             ),
                             Text(
-                              trands[index]['name'],
+                              lofi[index]['name'],
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w800,
@@ -174,7 +174,7 @@ class _LoFiPageState extends State<LoFiPage> {
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => VideoPlayerPage(
-                    videoUrl: trands[index]['videoUrl'],
+                    videoUrl: lofi[index]['videoUrl'],
                   ),
                 ));
               },
@@ -188,7 +188,7 @@ class _LoFiPageState extends State<LoFiPage> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            trands[index]['imgUrl'],
+                            lofi[index]['imgUrl'],
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -213,7 +213,7 @@ class _LoFiPageState extends State<LoFiPage> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(250),
                                 child: Image.network(
-                                  trands[index]['logoUrl'],
+                                  lofi[index]['logoUrl'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -224,7 +224,7 @@ class _LoFiPageState extends State<LoFiPage> {
                           width: 15,
                         ),
                         Text(
-                          trands[index]['name'],
+                          lofi[index]['name'],
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w800,

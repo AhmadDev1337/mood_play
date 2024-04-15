@@ -169,10 +169,10 @@ class DetailPage extends StatefulWidget {
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
 
-  List<dynamic> filterDataByName(String searchText) {
+  List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
-      String name = data['nameAccount'].toLowerCase();
-      return name.contains(searchText.toLowerCase());
+      String title = data['titleSong'].toLowerCase();
+      return title.contains(searchText.toLowerCase());
     }).toList();
   }
 
@@ -245,9 +245,9 @@ class _DetailPageState extends State<DetailPage> {
               child: ListView.builder(
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
-                itemCount: filterDataByName(searchText).length,
+                itemCount: filterDataByTitle(searchText).length,
                 itemBuilder: (BuildContext context, int index) {
-                  var filteredData = filterDataByName(searchText);
+                  var filteredData = filterDataByTitle(searchText);
                   return Column(
                     children: [
                       GestureDetector(
@@ -280,7 +280,7 @@ class _DetailPageState extends State<DetailPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    filteredData[index]['nameAccount'],
+                                    filteredData[index]['titleSong'],
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.w800,
@@ -291,7 +291,7 @@ class _DetailPageState extends State<DetailPage> {
                                     height: 5,
                                   ),
                                   Text(
-                                    filteredData[index]['titleSong'],
+                                    filteredData[index]['nameAccount'],
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,
