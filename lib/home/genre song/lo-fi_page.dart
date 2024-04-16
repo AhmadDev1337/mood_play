@@ -287,7 +287,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       allowMuting: true,
       autoPlay: true,
       looping: true,
-      aspectRatio: 9 / 19.5,
+      aspectRatio: 19.5 / 9,
     );
   }
 
