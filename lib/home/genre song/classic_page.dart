@@ -1,10 +1,9 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sized_box_for_whitespace, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
 
-import 'dart:async';
 import 'dart:developer';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
@@ -213,7 +212,7 @@ class _DetailPageState extends State<DetailPage> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10),
                                 child: Image.network(
-                                  filteredData[index]['fotoAccount'],
+                                  filteredData[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -236,6 +235,7 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                   Text(
                                     filteredData[index]['nameAccount'],
+                                    overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 10,
@@ -279,10 +279,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      allowFullScreen: true,
+      fullScreenByDefault: true,
       allowMuting: true,
       autoPlay: true,
       looping: true,
+      zoomAndPan: true,
     );
   }
 

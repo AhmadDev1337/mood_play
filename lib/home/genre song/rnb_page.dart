@@ -1,7 +1,10 @@
 // ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, sized_box_for_whitespace, avoid_unnecessary_containers, deprecated_member_use
 
+import 'dart:developer';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
@@ -12,20 +15,71 @@ class RnBPage extends StatefulWidget {
 }
 
 class _RnBPageState extends State<RnBPage> {
-  List<dynamic> pops = [];
+  List<dynamic> rnbs = [];
+  late List<BannerAd> _bannerAds;
+  int _currentAdIndex = 0;
+  bool _adsLoaded = false;
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/5710886789',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  void _loadBannerAds() {
+    _bannerAds = List<BannerAd>.generate(4, (index) {
+      final adUnitIds = [
+        'ca-app-pub-8363980854824352/7761167761',
+        'ca-app-pub-8363980854824352/4696353860',
+        'ca-app-pub-8363980854824352/1878618838',
+        'ca-app-pub-8363980854824352/3080019862',
+      ];
+      return BannerAd(
+        adUnitId: adUnitIds[index],
+        request: AdRequest(),
+        size: AdSize.mediumRectangle,
+        listener: BannerAdListener(
+          onAdLoaded: (Ad ad) {
+            log('Ad onAdLoaded');
+            setState(() {
+              _adsLoaded = true;
+            });
+          },
+          onAdFailedToLoad: (Ad ad, LoadAdError err) {
+            log('Ad onAdFailedToLoad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      )..load();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    _loadBannerAds();
+    _loadInterstitialAd();
   }
 
   fetchData() async {
     final response =
-        await http.get(Uri.parse('https://pastebin.com/raw/YPc246hg'));
+        await http.get(Uri.parse('https://pastebin.com/raw/JfdxZJxH'));
     if (response.statusCode == 200) {
       setState(() {
-        pops = json.decode(response.body)['pops'];
+        rnbs = json.decode(response.body)['rnbs'];
       });
     } else {
       throw Exception('Failed to load data');
@@ -33,71 +87,141 @@ class _RnBPageState extends State<RnBPage> {
   }
 
   @override
+  void dispose() {
+    for (var ad in _bannerAds) {
+      ad.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 20),
-      child: GridView.count(
-        crossAxisCount: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: MediaQuery.of(context).size.width / 53,
+      child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        children: List.generate(
-          pops.length < 15 ? pops.length : 15,
-          (index) => Column(
-            children: [
-              Column(
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => DetailPage(
-                                detail: pops[index]['detailPage'],
-                              )));
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              color: Colors.grey.shade900,
-                            ),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: [
-                                ClipRRect(
-                                  borderRadius: BorderRadius.circular(8),
-                                  child: Image.network(
-                                    pops[index]['logoUrl'],
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 10),
-                          Text(
-                            pops[index]['name'],
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 15,
-                            ),
-                          ),
-                        ],
+        itemCount: rnbs.length < 8 ? rnbs.length : 8,
+        itemBuilder: (context, index) {
+          if ((index + 1) % 2 == 0 && index != 0) {
+            final ad = _bannerAds[_currentAdIndex];
+            _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
+            return Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    _loadInterstitialAd();
+                    Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => DetailPage(
+                        detail: rnbs[index]['detailPage'],
                       ),
+                    ));
+                  },
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Colors.grey.shade900,
+                              ),
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(8),
+                                    child: Image.network(
+                                      rnbs[index]['logoUrl'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(width: 10),
+                            Text(
+                              rnbs[index]['name'],
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w500,
+                                fontSize: 15,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                _adsLoaded
+                    ? Container(
+                        height: 50,
+                        child: AdWidget(ad: ad),
+                      )
+                    : SizedBox(height: 50),
+                SizedBox(height: 10),
+              ],
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                _loadInterstitialAd();
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => DetailPage(
+                    detail: rnbs[index]['detailPage'],
+                  ),
+                ));
+              },
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 50,
+                          height: 50,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey.shade900,
+                          ),
+                          child: Stack(
+                            fit: StackFit.expand,
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(8),
+                                child: Image.network(
+                                  rnbs[index]['logoUrl'],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          rnbs[index]['name'],
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 15,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
+                  SizedBox(height: 10),
                 ],
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }
