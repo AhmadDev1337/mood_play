@@ -335,10 +335,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      fullScreenByDefault: true,
       allowMuting: true,
       autoPlay: true,
       looping: true,
+      aspectRatio: 9 / 19.5,
     );
   }
 
@@ -354,9 +354,10 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return Scaffold(
       backgroundColor: Color(0xff0d0d0d),
       body: Center(
-          child: Chewie(
-        controller: _chewieController,
-      )),
+        child: Chewie(
+          controller: _chewieController,
+        ),
+      ),
     );
   }
 }

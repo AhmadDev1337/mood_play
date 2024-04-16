@@ -495,11 +495,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
-      fullScreenByDefault: true,
       allowMuting: true,
       autoPlay: true,
       looping: true,
       zoomAndPan: true,
+      aspectRatio: 9 / 19.5,
     );
   }
 

@@ -485,6 +485,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       allowFullScreen: true,
+      aspectRatio: 9 / 19.5,
       allowMuting: true,
       autoPlay: true,
       looping: true,
