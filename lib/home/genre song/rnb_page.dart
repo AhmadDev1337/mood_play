@@ -23,7 +23,7 @@ class _RnBPageState extends State<RnBPage> {
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/5710886789',
+      adUnitId: 'ca-app-pub-8363980854824352/7081477072',
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -41,10 +41,10 @@ class _RnBPageState extends State<RnBPage> {
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(4, (index) {
       final adUnitIds = [
-        'ca-app-pub-8363980854824352/7761167761',
-        'ca-app-pub-8363980854824352/4696353860',
-        'ca-app-pub-8363980854824352/1878618838',
-        'ca-app-pub-8363980854824352/3080019862',
+        'ca-app-pub-8363980854824352/5680765495',
+        'ca-app-pub-8363980854824352/4790355654',
+        'ca-app-pub-8363980854824352/1995504062',
+        'ca-app-pub-8363980854824352/6452272755',
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

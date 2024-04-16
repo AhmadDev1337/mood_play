@@ -23,7 +23,7 @@ class _JazzPageState extends State<JazzPage> {
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/5710886789',
+      adUnitId: 'ca-app-pub-8363980854824352/3500157424',
       request: AdRequest(),
       adLoadCallback: InterstitialAdLoadCallback(
         onAdLoaded: (InterstitialAd ad) {
@@ -41,10 +41,10 @@ class _JazzPageState extends State<JazzPage> {
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(4, (index) {
       final adUnitIds = [
-        'ca-app-pub-8363980854824352/7761167761',
-        'ca-app-pub-8363980854824352/4696353860',
-        'ca-app-pub-8363980854824352/1878618838',
-        'ca-app-pub-8363980854824352/3080019862',
+        'ca-app-pub-8363980854824352/2190945189',
+        'ca-app-pub-8363980854824352/4017681103',
+        'ca-app-pub-8363980854824352/9707640412',
+        'ca-app-pub-8363980854824352/1391517764',
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

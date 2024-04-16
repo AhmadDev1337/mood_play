@@ -42,9 +42,9 @@ class _HipHopPageState extends State<HipHopPage> {
     _bannerAds = List<BannerAd>.generate(4, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/7761167761',
-        'ca-app-pub-8363980854824352/4696353860',
-        'ca-app-pub-8363980854824352/1878618838',
-        'ca-app-pub-8363980854824352/3080019862',
+        'ca-app-pub-8363980854824352/4034509891',
+        'ca-app-pub-8363980854824352/4646885426',
+        'ca-app-pub-8363980854824352/5330762770',
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
