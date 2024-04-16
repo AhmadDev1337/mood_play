@@ -18,20 +18,38 @@ class _LoFiPageState extends State<LoFiPage> {
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   bool _adsLoaded = false;
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/2878190953',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(10, (index) {
       final adUnitIds = [
-        'ca-app-pub-8363980854824352/5006742410',
-        'ca-app-pub-8363980854824352/4374185583',
-        'ca-app-pub-8363980854824352/3554059947',
-        'ca-app-pub-8363980854824352/2568281338',
-        'ca-app-pub-8363980854824352/8005791919',
-        'ca-app-pub-8363980854824352/7231249377',
-        'ca-app-pub-8363980854824352/6544019519',
-        'ca-app-pub-8363980854824352/4953604232',
-        'ca-app-pub-8363980854824352/4012057658',
-        'ca-app-pub-8363980854824352/5213458689'
+        'ca-app-pub-8363980854824352/5012565556',
+        'ca-app-pub-8363980854824352/6646562499',
+        'ca-app-pub-8363980854824352/5455418680',
+        'ca-app-pub-8363980854824352/4630773246',
+        'ca-app-pub-8363980854824352/2735237649',
+        'ca-app-pub-8363980854824352/9203092007',
+        'ca-app-pub-8363980854824352/9085023571',
+        'ca-app-pub-8363980854824352/6623679054',
+        'ca-app-pub-8363980854824352/3507912192',
+        'ca-app-pub-8363980854824352/2543665958'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -55,6 +73,7 @@ class _LoFiPageState extends State<LoFiPage> {
     super.initState();
     fetchData();
     _loadBannerAds();
+    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -93,6 +112,7 @@ class _LoFiPageState extends State<LoFiPage> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    _loadInterstitialAd();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => VideoPlayerPage(
                         videoUrl: lofi[index]['videoUrl'],
