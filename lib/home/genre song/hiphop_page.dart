@@ -44,7 +44,7 @@ class _HipHopPageState extends State<HipHopPage> {
         'ca-app-pub-8363980854824352/7761167761',
         'ca-app-pub-8363980854824352/4034509891',
         'ca-app-pub-8363980854824352/4646885426',
-        'ca-app-pub-8363980854824352/5330762770',
+        'ca-app-pub-8363980854824352/5330762770'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

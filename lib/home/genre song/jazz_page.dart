@@ -44,7 +44,7 @@ class _JazzPageState extends State<JazzPage> {
         'ca-app-pub-8363980854824352/2190945189',
         'ca-app-pub-8363980854824352/4017681103',
         'ca-app-pub-8363980854824352/9707640412',
-        'ca-app-pub-8363980854824352/1391517764',
+        'ca-app-pub-8363980854824352/1391517764'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

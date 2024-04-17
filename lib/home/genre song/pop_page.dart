@@ -4,25 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 
 import 'pop/Kpop/kpop_album.dart';
-import 'pop/Kpop/profile_page.dart';
+import 'pop/Kpop/kpop_list.dart';
 import 'pop/list_pop.dart';
 import 'pop/popular_pop.dart';
-
-class JsonData {
-  final String imgUrl;
-  final String logoUrl;
-  final String videoUrl;
-  final String name;
-  final String title;
-
-  JsonData({
-    required this.imgUrl,
-    required this.logoUrl,
-    required this.videoUrl,
-    required this.name,
-    required this.title,
-  });
-}
 
 class PopPage extends StatefulWidget {
   const PopPage({super.key});

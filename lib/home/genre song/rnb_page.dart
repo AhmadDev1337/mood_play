@@ -44,7 +44,7 @@ class _RnBPageState extends State<RnBPage> {
         'ca-app-pub-8363980854824352/5680765495',
         'ca-app-pub-8363980854824352/4790355654',
         'ca-app-pub-8363980854824352/1995504062',
-        'ca-app-pub-8363980854824352/6452272755',
+        'ca-app-pub-8363980854824352/6452272755'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

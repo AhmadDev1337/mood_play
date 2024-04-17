@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, use_key_in_widget_constructors, avoid_unnecessary_containers, library_private_types_in_public_api, deprecated_member_use, prefer_const_constructors_in_immutables, sized_box_for_whitespace
 
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
 
@@ -184,20 +186,14 @@ class _KpopAlbumPageState extends State<KpopAlbumPage> {
                                           ),
                                         ),
                                         SizedBox(width: 10),
-                                        Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              filterDataByName(
-                                                  searchText)[index]['name'],
-                                              style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ],
+                                        Text(
+                                          filterDataByName(searchText)[index]
+                                              ['name'],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -231,6 +227,30 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/9490850703',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
@@ -315,6 +335,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          _loadInterstitialAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

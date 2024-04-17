@@ -44,7 +44,7 @@ class _RockPageState extends State<RockPage> {
         'ca-app-pub-8363980854824352/2550053741',
         'ca-app-pub-8363980854824352/4696353860',
         'ca-app-pub-8363980854824352/1878618838',
-        'ca-app-pub-8363980854824352/3080019862',
+        'ca-app-pub-8363980854824352/3080019862'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],

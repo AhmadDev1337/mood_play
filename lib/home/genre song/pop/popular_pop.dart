@@ -1,10 +1,12 @@
-// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, sized_box_for_whitespace, avoid_unnecessary_containers, deprecated_member_use
+// ignore_for_file: use_key_in_widget_constructors, library_private_types_in_public_api, prefer_const_constructors, sized_box_for_whitespace, prefer_const_constructors_in_immutables, prefer_const_literals_to_create_immutables, avoid_unnecessary_containers, deprecated_member_use
+import 'dart:developer';
 
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:video_player/video_player.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class PopularPopPage extends StatefulWidget {
   @override
@@ -13,11 +15,61 @@ class PopularPopPage extends StatefulWidget {
 
 class _PopularPopPageState extends State<PopularPopPage> {
   List<dynamic> pops = [];
+  late List<BannerAd> _bannerAds;
+  int _currentAdIndex = 0;
+  bool _adsLoaded = false;
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/1499328976',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  void _loadBannerAds() {
+    _bannerAds = List<BannerAd>.generate(3, (index) {
+      final adUnitIds = [
+        'ca-app-pub-8363980854824352/8177769031',
+        'ca-app-pub-8363980854824352/2950660378',
+        'ca-app-pub-8363980854824352/6610703786'
+      ];
+      return BannerAd(
+        adUnitId: adUnitIds[index],
+        request: AdRequest(),
+        size: AdSize.mediumRectangle,
+        listener: BannerAdListener(
+          onAdLoaded: (Ad ad) {
+            log('Ad onAdLoaded');
+            setState(() {
+              _adsLoaded = true;
+            });
+          },
+          onAdFailedToLoad: (Ad ad, LoadAdError err) {
+            log('Ad onAdFailedToLoad: ${err.message}');
+            ad.dispose();
+          },
+        ),
+      )..load();
+    });
+  }
 
   @override
   void initState() {
     super.initState();
     fetchData();
+    _loadBannerAds();
+    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -33,112 +85,225 @@ class _PopularPopPageState extends State<PopularPopPage> {
   }
 
   @override
+  void dispose() {
+    for (var ad in _bannerAds) {
+      ad.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 20),
-      child: GridView.count(
-        crossAxisCount: 1,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: MediaQuery.of(context).size.width / 210,
+      child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        children: List.generate(
-          pops.length < 15 ? pops.length : 15,
-          (index) => Column(
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(
+        itemCount: pops.length < 6 ? pops.length : 6,
+        itemBuilder: (context, index) {
+          if ((index + 1) % 2 == 0 && index != 0) {
+            final ad = _bannerAds[_currentAdIndex];
+            _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
+            return Column(
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => VideoPlayerPage(
-                            videoUrl: pops[index]['videoUrl'],
-                          )));
-                },
-                child: Column(
-                  children: [
-                    Container(
-                      height: 150,
-                      child: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.network(
-                              pops[index]['imgUrl'],
-                              fit: BoxFit.fill,
-                            ),
-                          ),
-                        ],
+                        videoUrl: pops[index]['videoUrl'],
                       ),
-                    ),
-                    SizedBox(height: 8),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => DetailPage(
-                                  detail: pops[index]['detailPage'],
-                                )));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
+                    ));
+                  },
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 150,
+                        child: Stack(
+                          fit: StackFit.expand,
                           children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(250),
-                                color: Colors.grey.shade900,
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: Image.network(
+                                pops[index]['imgUrl'],
+                                fit: BoxFit.fill,
                               ),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(250),
-                                    child: Image.network(
-                                      pops[index]['logoUrl'],
-                                      fit: BoxFit.fill,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 20,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  pops[index]['title'],
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 20,
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 2,
-                                ),
-                                Text(
-                                  pops[index]['name'],
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                    fontSize: 10,
-                                  ),
-                                ),
-                              ],
                             ),
                           ],
                         ),
                       ),
-                    ),
-                  ],
+                      SizedBox(height: 8),
+                      GestureDetector(
+                        onTap: () {
+                          _loadInterstitialAd();
+                          Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => DetailPage(
+                              detail: pops[index]['detailPage'],
+                            ),
+                          ));
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              Container(
+                                width: 40,
+                                height: 40,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(250),
+                                  color: Colors.grey.shade900,
+                                ),
+                                child: Stack(
+                                  fit: StackFit.expand,
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(250),
+                                      child: Image.network(
+                                        pops[index]['logoUrl'],
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(
+                                width: 20,
+                              ),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pops[index]['title'],
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w800,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    height: 2,
+                                  ),
+                                  Text(
+                                    pops[index]['name'],
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 10,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                    ],
+                  ),
                 ),
+                SizedBox(height: 10),
+                _adsLoaded
+                    ? Container(
+                        height: 50,
+                        child: AdWidget(ad: ad),
+                      )
+                    : SizedBox(height: 50), // Placeholder for Ad
+                SizedBox(height: 10),
+              ],
+            );
+          } else {
+            return GestureDetector(
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => VideoPlayerPage(
+                    videoUrl: pops[index]['videoUrl'],
+                  ),
+                ));
+              },
+              child: Column(
+                children: [
+                  Container(
+                    height: 150,
+                    child: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: Image.network(
+                            pops[index]['imgUrl'],
+                            fit: BoxFit.fill,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 8),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => DetailPage(
+                          detail: pops[index]['detailPage'],
+                        ),
+                      ));
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(250),
+                              color: Colors.grey.shade900,
+                            ),
+                            child: Stack(
+                              fit: StackFit.expand,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(250),
+                                  child: Image.network(
+                                    pops[index]['logoUrl'],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                pops[index]['title'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w800,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              SizedBox(
+                                height: 2,
+                              ),
+                              Text(
+                                pops[index]['name'],
+                                style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                ],
               ),
-            ],
-          ),
-        ),
+            );
+          }
+        },
       ),
     );
   }
@@ -322,10 +487,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
+      allowFullScreen: true,
+      aspectRatio: 9 / 19.5,
       allowMuting: true,
       autoPlay: true,
       looping: true,
-      aspectRatio: 9 / 19.5,
     );
   }
 
