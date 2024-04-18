@@ -103,7 +103,7 @@ class _LoFiPageState extends State<LoFiPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: lofi.length < 20 ? lofi.length : 20,
+        itemCount: lofi.length < 40 ? lofi.length : 40,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];

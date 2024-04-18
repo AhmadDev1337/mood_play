@@ -18,24 +18,6 @@ class _PopularPopPageState extends State<PopularPopPage> {
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   bool _adsLoaded = false;
-  InterstitialAd? _interstitialAd;
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/1499328976',
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          _interstitialAd = ad;
-          _interstitialAd!.show();
-          log('Ad onAdLoaded');
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          log('Interstitial ad failed to load: $error');
-        },
-      ),
-    );
-  }
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(3, (index) {
@@ -69,7 +51,6 @@ class _PopularPopPageState extends State<PopularPopPage> {
     super.initState();
     fetchData();
     _loadBannerAds();
-    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -99,7 +80,7 @@ class _PopularPopPageState extends State<PopularPopPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: pops.length < 6 ? pops.length : 6,
+        itemCount: pops.length < 60 ? pops.length : 60,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
@@ -134,7 +115,6 @@ class _PopularPopPageState extends State<PopularPopPage> {
                       SizedBox(height: 8),
                       GestureDetector(
                         onTap: () {
-                          _loadInterstitialAd();
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => DetailPage(
                               detail: pops[index]['detailPage'],
@@ -320,6 +300,30 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/1499328976',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
@@ -404,6 +408,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          _loadInterstitialAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

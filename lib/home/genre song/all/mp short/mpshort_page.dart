@@ -180,9 +180,9 @@ class _MpShortPageState extends State<MpShortPage> {
                         shrinkWrap: true,
                         physics: NeverScrollableScrollPhysics(),
                         children: List.generate(
-                          filterDataByName(searchText).length < 10
+                          filterDataByName(searchText).length < 60
                               ? filterDataByName(searchText).length
-                              : 10,
+                              : 60,
                           (index) {
                             if ((index + 1) % 5 == 0) {
                               final ad = _bannerAds[_currentAdIndex];

@@ -16,31 +16,6 @@ class ClassicPage extends StatefulWidget {
 
 class _ClassicPageState extends State<ClassicPage> {
   List<dynamic> songs = [];
-  InterstitialAd? _interstitialAd;
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/7901935854',
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          _interstitialAd = ad;
-          _interstitialAd!.show();
-          log('Ad onAdLoaded');
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          log('Interstitial ad failed to load: $error');
-        },
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchData();
-    _loadInterstitialAd();
-  }
 
   fetchData() async {
     final response =
@@ -66,10 +41,9 @@ class _ClassicPageState extends State<ClassicPage> {
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
         children: List.generate(
-          songs.length < 15 ? songs.length : 15,
+          songs.length < 80 ? songs.length : 80,
           (index) => GestureDetector(
             onTap: () {
-              _loadInterstitialAd();
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => DetailPage(
                         detail: songs[index]['detailPage'],
@@ -111,6 +85,30 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/7901935854',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
@@ -195,6 +193,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          _loadInterstitialAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

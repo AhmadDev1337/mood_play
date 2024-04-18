@@ -19,24 +19,6 @@ class _RockPageState extends State<RockPage> {
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   bool _adsLoaded = false;
-  InterstitialAd? _interstitialAd;
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/8999912023',
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          _interstitialAd = ad;
-          _interstitialAd!.show();
-          log('Ad onAdLoaded');
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          log('Interstitial ad failed to load: $error');
-        },
-      ),
-    );
-  }
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(4, (index) {
@@ -71,7 +53,6 @@ class _RockPageState extends State<RockPage> {
     super.initState();
     fetchData();
     _loadBannerAds();
-    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -101,7 +82,7 @@ class _RockPageState extends State<RockPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: rocks.length < 8 ? rocks.length : 8,
+        itemCount: rocks.length < 80 ? rocks.length : 80,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
@@ -110,7 +91,6 @@ class _RockPageState extends State<RockPage> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    _loadInterstitialAd();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => DetailPage(
                         detail: rocks[index]['detailPage'],
@@ -171,7 +151,6 @@ class _RockPageState extends State<RockPage> {
           } else {
             return GestureDetector(
               onTap: () {
-                _loadInterstitialAd();
                 Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => DetailPage(
                     detail: rocks[index]['detailPage'],
@@ -238,6 +217,30 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/8999912023',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
@@ -322,6 +325,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          _loadInterstitialAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

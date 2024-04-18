@@ -97,7 +97,7 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: trands.length < 40 ? trands.length : 40,
+        itemCount: trands.length < 80 ? trands.length : 80,
         itemBuilder: (context, index) {
           if ((index + 1) % 2 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
