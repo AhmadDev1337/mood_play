@@ -114,7 +114,7 @@ class _LoFiPageState extends State<LoFiPage> {
                   onTap: () {
                     _loadInterstitialAd();
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VideoPlayerPage(
+                      builder: (context) => VideoPlayerLandscapePage(
                         videoUrl: lofi[index]['videoUrl'],
                       ),
                     ));
@@ -193,7 +193,7 @@ class _LoFiPageState extends State<LoFiPage> {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VideoPlayerPage(
+                  builder: (context) => VideoPlayerLandscapePage(
                     videoUrl: lofi[index]['videoUrl'],
                   ),
                 ));
@@ -265,16 +265,18 @@ class _LoFiPageState extends State<LoFiPage> {
   }
 }
 
-class VideoPlayerPage extends StatefulWidget {
+class VideoPlayerLandscapePage extends StatefulWidget {
   final String videoUrl;
 
-  const VideoPlayerPage({Key? key, required this.videoUrl}) : super(key: key);
+  const VideoPlayerLandscapePage({Key? key, required this.videoUrl})
+      : super(key: key);
 
   @override
-  _VideoPlayerPageState createState() => _VideoPlayerPageState();
+  _VideoPlayerLandscapePageState createState() =>
+      _VideoPlayerLandscapePageState();
 }
 
-class _VideoPlayerPageState extends State<VideoPlayerPage> {
+class _VideoPlayerLandscapePageState extends State<VideoPlayerLandscapePage> {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
 

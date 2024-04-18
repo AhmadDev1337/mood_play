@@ -325,7 +325,7 @@ class _DetailPageState extends State<DetailPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VideoPlayerPage(
+                              builder: (context) => VideoPlayerLandscapePage(
                                   videoUrl: widget.detail[index]
                                       ['videoUrlSong']),
                             ),
@@ -386,16 +386,18 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
-class VideoPlayerPage extends StatefulWidget {
+class VideoPlayerLandscapePage extends StatefulWidget {
   final String videoUrl;
 
-  const VideoPlayerPage({Key? key, required this.videoUrl}) : super(key: key);
+  const VideoPlayerLandscapePage({Key? key, required this.videoUrl})
+      : super(key: key);
 
   @override
-  _VideoPlayerPageState createState() => _VideoPlayerPageState();
+  _VideoPlayerLandscapePageState createState() =>
+      _VideoPlayerLandscapePageState();
 }
 
-class _VideoPlayerPageState extends State<VideoPlayerPage> {
+class _VideoPlayerLandscapePageState extends State<VideoPlayerLandscapePage> {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
 
@@ -408,7 +410,7 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
       allowMuting: true,
       autoPlay: true,
       looping: true,
-      aspectRatio: 9 / 19.5,
+      aspectRatio: 19.5 / 9,
     );
   }
 

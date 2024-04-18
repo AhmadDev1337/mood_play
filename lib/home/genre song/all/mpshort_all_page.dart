@@ -73,8 +73,8 @@ class _MpShortAllPageState extends State<MpShortAllPage> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) =>
-                      VideoPlayerPage(videoUrl: songs[index]['videoUrl']),
+                  builder: (context) => VideoPlayerPotraitPage(
+                      videoUrl: songs[index]['videoUrl']),
                 ),
               );
             },
@@ -255,7 +255,7 @@ class _DetailPageState extends State<DetailPage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => VideoPlayerPage(
+                              builder: (context) => VideoPlayerLandscapePage(
                                   videoUrl: widget.detail[index]
                                       ['videoUrlSong']),
                             ),
@@ -316,16 +316,17 @@ class _DetailPageState extends State<DetailPage> {
   }
 }
 
-class VideoPlayerPage extends StatefulWidget {
+class VideoPlayerPotraitPage extends StatefulWidget {
   final String videoUrl;
 
-  const VideoPlayerPage({Key? key, required this.videoUrl}) : super(key: key);
+  const VideoPlayerPotraitPage({Key? key, required this.videoUrl})
+      : super(key: key);
 
   @override
-  _VideoPlayerPageState createState() => _VideoPlayerPageState();
+  _VideoPlayerPotraitPageState createState() => _VideoPlayerPotraitPageState();
 }
 
-class _VideoPlayerPageState extends State<VideoPlayerPage> {
+class _VideoPlayerPotraitPageState extends State<VideoPlayerPotraitPage> {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
 
@@ -335,10 +336,11 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
+      allowFullScreen: true,
+      aspectRatio: 9 / 19.5,
       allowMuting: true,
       autoPlay: true,
       looping: true,
-      aspectRatio: 9 / 19.5,
     );
   }
 
@@ -354,10 +356,57 @@ class _VideoPlayerPageState extends State<VideoPlayerPage> {
     return Scaffold(
       backgroundColor: Color(0xff0d0d0d),
       body: Center(
-        child: Chewie(
-          controller: _chewieController,
-        ),
-      ),
+          child: Chewie(
+        controller: _chewieController,
+      )),
+    );
+  }
+}
+
+class VideoPlayerLandscapePage extends StatefulWidget {
+  final String videoUrl;
+
+  const VideoPlayerLandscapePage({Key? key, required this.videoUrl})
+      : super(key: key);
+
+  @override
+  _VideoPlayerLandscapePageState createState() =>
+      _VideoPlayerLandscapePageState();
+}
+
+class _VideoPlayerLandscapePageState extends State<VideoPlayerLandscapePage> {
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+
+  @override
+  void initState() {
+    super.initState();
+    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
+    _chewieController = ChewieController(
+      videoPlayerController: _videoPlayerController,
+      allowFullScreen: true,
+      aspectRatio: 19.5 / 9,
+      allowMuting: true,
+      autoPlay: true,
+      looping: true,
+    );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Color(0xff0d0d0d),
+      body: Center(
+          child: Chewie(
+        controller: _chewieController,
+      )),
     );
   }
 }
