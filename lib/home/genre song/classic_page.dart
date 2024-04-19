@@ -30,6 +30,12 @@ class _ClassicPageState extends State<ClassicPage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 5, bottom: 30),

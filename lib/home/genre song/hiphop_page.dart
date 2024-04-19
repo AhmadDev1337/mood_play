@@ -21,12 +21,24 @@ class _HipHopPageState extends State<HipHopPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(4, (index) {
+    _bannerAds = List<BannerAd>.generate(17, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/7761167761',
         'ca-app-pub-8363980854824352/4034509891',
         'ca-app-pub-8363980854824352/4646885426',
-        'ca-app-pub-8363980854824352/5330762770'
+        'ca-app-pub-8363980854824352/5330762770',
+        'ca-app-pub-8363980854824352/2981653804',
+        'ca-app-pub-8363980854824352/3944231748',
+        'ca-app-pub-8363980854824352/1430066277',
+        'ca-app-pub-8363980854824352/6846044488',
+        'ca-app-pub-8363980854824352/1668572134',
+        'ca-app-pub-8363980854824352/1593717808',
+        'ca-app-pub-8363980854824352/1860993884',
+        'ca-app-pub-8363980854824352/5508912084',
+        'ca-app-pub-8363980854824352/9547912216',
+        'ca-app-pub-8363980854824352/9004986731',
+        'ca-app-pub-8363980854824352/2882748749',
+        'ca-app-pub-8363980854824352/7628325887'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -82,9 +94,9 @@ class _HipHopPageState extends State<HipHopPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: hiphops.length < 80 ? hiphops.length : 80,
+        itemCount: hiphops.length < 68 ? hiphops.length : 68,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
+          if ((index + 1) % 4 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(
@@ -144,8 +156,7 @@ class _HipHopPageState extends State<HipHopPage> {
                         height: 50,
                         child: AdWidget(ad: ad),
                       )
-                    : SizedBox(height: 50),
-                SizedBox(height: 10),
+                    : SizedBox(height: 0),
               ],
             );
           } else {

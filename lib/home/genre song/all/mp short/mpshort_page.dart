@@ -19,12 +19,8 @@ class MpShortPage extends StatefulWidget {
 
 class _MpShortPageState extends State<MpShortPage> {
   late List<dynamic> songs = [];
-
   String searchText = '';
-  late List<BannerAd> _bannerAds;
-  int _currentAdIndex = 0;
   InterstitialAd? _interstitialAd;
-  bool _adsLoaded = false;
 
   void _loadInterstitialAd() {
     InterstitialAd.load(
@@ -43,37 +39,10 @@ class _MpShortPageState extends State<MpShortPage> {
     );
   }
 
-  void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(5, (index) {
-      final adUnitIds = [
-        'ca-app-pub-8363980854824352/5006742410',
-        'ca-app-pub-8363980854824352/4374185583',
-        'ca-app-pub-8363980854824352/3554059947',
-        'ca-app-pub-8363980854824352/2568281338',
-        'ca-app-pub-8363980854824352/8005791919'
-      ];
-      return BannerAd(
-        adUnitId: adUnitIds[index],
-        request: AdRequest(),
-        size: AdSize.mediumRectangle,
-        listener: BannerAdListener(
-          onAdLoaded: (Ad ad) {
-            log('Ad onAdLoaded');
-          },
-          onAdFailedToLoad: (Ad ad, LoadAdError err) {
-            log('Ad onAdFailedToLoad: ${err.message}');
-            ad.dispose();
-          },
-        ),
-      )..load();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     fetchData();
-    _loadBannerAds();
     _loadInterstitialAd();
   }
 
@@ -183,127 +152,108 @@ class _MpShortPageState extends State<MpShortPage> {
                           filterDataByName(searchText).length < 60
                               ? filterDataByName(searchText).length
                               : 60,
-                          (index) {
-                            if ((index + 1) % 5 == 0) {
-                              final ad = _bannerAds[_currentAdIndex];
-                              _currentAdIndex =
-                                  (_currentAdIndex + 1) % _bannerAds.length;
-                              return _adsLoaded
-                                  ? Container(
-                                      height: 50,
-                                      child: AdWidget(ad: ad),
-                                    )
-                                  : SizedBox(height: 50);
-                            } else {
-                              int realIndex = index ~/ 1;
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          VideoPlayerPotraitPage(
-                                              videoUrl: filterDataByName(
-                                                      searchText)[realIndex]
-                                                  ['videoUrl']),
-                                    ),
-                                  );
-                                },
-                                child: Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.4,
-                                  child: Stack(
-                                    fit: StackFit.expand,
-                                    children: [
-                                      ClipRRect(
-                                        borderRadius: BorderRadius.circular(10),
-                                        child: Image.network(
-                                          filterDataByName(
-                                              searchText)[realIndex]['imgUrl'],
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                      Positioned(
-                                        bottom: 10,
-                                        left: 10,
-                                        child: Row(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                _loadInterstitialAd();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        DetailPage(
-                                                      detail: filterDataByName(
-                                                                  searchText)[
-                                                              realIndex]
-                                                          ['detailPage'],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                              child: Container(
-                                                width: 40,
-                                                height: 40,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          250),
-                                                  color: Colors.grey.shade900,
-                                                ),
-                                                child: Stack(
-                                                  fit: StackFit.expand,
-                                                  children: [
-                                                    ClipRRect(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              250),
-                                                      child: Image.network(
-                                                        filterDataByName(
-                                                                    searchText)[
-                                                                realIndex]
-                                                            ['logoUrl'],
-                                                        fit: BoxFit.fill,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(width: 10),
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  filterDataByName(searchText)[
-                                                      realIndex]['name'],
-                                                  style: TextStyle(
-                                                      color: Colors.white,
-                                                      fontWeight:
-                                                          FontWeight.w600),
-                                                ),
-                                                Text(
-                                                  filterDataByName(searchText)[
-                                                      realIndex]['title'],
-                                                  style: TextStyle(
-                                                      color: Colors.white),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
+                          (index) => GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => VideoPlayerPotraitPage(
+                                    videoUrl:
+                                        filterDataByName(searchText)[index]
+                                            ['videoUrl'],
                                   ),
                                 ),
                               );
-                            }
-                          },
+                            },
+                            child: Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              child: Stack(
+                                fit: StackFit.expand,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network(
+                                      filterDataByName(searchText)[index]
+                                          ['imgUrl'],
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 10,
+                                    left: 10,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            _loadInterstitialAd();
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailPage(
+                                                  detail: filterDataByName(
+                                                          searchText)[index]
+                                                      ['detailPage'],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 40,
+                                            height: 40,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(250),
+                                              color: Colors.grey.shade900,
+                                            ),
+                                            child: Stack(
+                                              fit: StackFit.expand,
+                                              children: [
+                                                ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          250),
+                                                  child: Image.network(
+                                                    filterDataByName(
+                                                            searchText)[index]
+                                                        ['logoUrl'],
+                                                    fit: BoxFit.fill,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(width: 10),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              filterDataByName(
+                                                  searchText)[index]['name'],
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                                fontWeight: FontWeight.w600,
+                                              ),
+                                            ),
+                                            Text(
+                                              filterDataByName(
+                                                  searchText)[index]['title'],
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                         ),
                       ),
                     ),

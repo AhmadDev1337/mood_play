@@ -15,9 +15,6 @@ class LoFiPage extends StatefulWidget {
 
 class _LoFiPageState extends State<LoFiPage> {
   List<dynamic> lofi = [];
-  late List<BannerAd> _bannerAds;
-  int _currentAdIndex = 0;
-  bool _adsLoaded = false;
   InterstitialAd? _interstitialAd;
 
   void _loadInterstitialAd() {
@@ -37,42 +34,10 @@ class _LoFiPageState extends State<LoFiPage> {
     );
   }
 
-  void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(10, (index) {
-      final adUnitIds = [
-        'ca-app-pub-8363980854824352/5012565556',
-        'ca-app-pub-8363980854824352/6646562499',
-        'ca-app-pub-8363980854824352/5455418680',
-        'ca-app-pub-8363980854824352/4630773246',
-        'ca-app-pub-8363980854824352/2735237649',
-        'ca-app-pub-8363980854824352/9203092007',
-        'ca-app-pub-8363980854824352/9085023571',
-        'ca-app-pub-8363980854824352/6623679054',
-        'ca-app-pub-8363980854824352/3507912192',
-        'ca-app-pub-8363980854824352/2543665958'
-      ];
-      return BannerAd(
-        adUnitId: adUnitIds[index],
-        request: AdRequest(),
-        size: AdSize.mediumRectangle,
-        listener: BannerAdListener(
-          onAdLoaded: (Ad ad) {
-            log('Ad onAdLoaded');
-          },
-          onAdFailedToLoad: (Ad ad, LoadAdError err) {
-            log('Ad onAdFailedToLoad: ${err.message}');
-            ad.dispose();
-          },
-        ),
-      )..load();
-    });
-  }
-
   @override
   void initState() {
     super.initState();
     fetchData();
-    _loadBannerAds();
     _loadInterstitialAd();
   }
 
@@ -89,14 +54,6 @@ class _LoFiPageState extends State<LoFiPage> {
   }
 
   @override
-  void dispose() {
-    for (var ad in _bannerAds) {
-      ad.dispose();
-    }
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(top: 20),
@@ -105,160 +62,75 @@ class _LoFiPageState extends State<LoFiPage> {
         physics: BouncingScrollPhysics(),
         itemCount: lofi.length < 40 ? lofi.length : 40,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
-            final ad = _bannerAds[_currentAdIndex];
-            _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
-            return Column(
+          return GestureDetector(
+            onTap: () {
+              _loadInterstitialAd();
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => VideoPlayerLandscapePage(
+                  videoUrl: lofi[index]['videoUrl'],
+                ),
+              ));
+            },
+            child: Column(
               children: [
-                GestureDetector(
-                  onTap: () {
-                    _loadInterstitialAd();
-                    Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VideoPlayerLandscapePage(
-                        videoUrl: lofi[index]['videoUrl'],
+                Container(
+                  height: 150,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          lofi[index]['imgUrl'],
+                          fit: BoxFit.fill,
+                        ),
                       ),
-                    ));
-                  },
-                  child: Column(
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
                     children: [
                       Container(
-                        height: 150,
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(250),
+                          color: Colors.grey.shade900,
+                        ),
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(250),
                               child: Image.network(
-                                lofi[index]['imgUrl'],
-                                fit: BoxFit.fill,
+                                lofi[index]['logoUrl'],
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ],
                         ),
                       ),
-                      SizedBox(height: 8),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(250),
-                                color: Colors.grey.shade900,
-                              ),
-                              child: Stack(
-                                fit: StackFit.expand,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: BorderRadius.circular(250),
-                                    child: Image.network(
-                                      lofi[index]['logoUrl'],
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            SizedBox(
-                              width: 15,
-                            ),
-                            Text(
-                              lofi[index]['name'],
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.w800,
-                                fontSize: 18,
-                              ),
-                            ),
-                          ],
+                      SizedBox(
+                        width: 15,
+                      ),
+                      Text(
+                        lofi[index]['name'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w800,
+                          fontSize: 18,
                         ),
                       ),
-                      SizedBox(height: 10),
                     ],
                   ),
                 ),
                 SizedBox(height: 10),
-                _adsLoaded
-                    ? Container(
-                        height: 50,
-                        child: AdWidget(ad: ad),
-                      )
-                    : SizedBox(height: 50),
-                SizedBox(height: 10),
               ],
-            );
-          } else {
-            return GestureDetector(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VideoPlayerLandscapePage(
-                    videoUrl: lofi[index]['videoUrl'],
-                  ),
-                ));
-              },
-              child: Column(
-                children: [
-                  Container(
-                    height: 150,
-                    child: Stack(
-                      fit: StackFit.expand,
-                      children: [
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: Image.network(
-                            lofi[index]['imgUrl'],
-                            fit: BoxFit.fill,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 8),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(250),
-                            color: Colors.grey.shade900,
-                          ),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              ClipRRect(
-                                borderRadius: BorderRadius.circular(250),
-                                child: Image.network(
-                                  lofi[index]['logoUrl'],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          width: 15,
-                        ),
-                        Text(
-                          lofi[index]['name'],
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w800,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(height: 10),
-                ],
-              ),
-            );
-          }
+            ),
+          );
         },
       ),
     );

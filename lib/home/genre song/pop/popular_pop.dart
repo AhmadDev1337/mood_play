@@ -20,11 +20,28 @@ class _PopularPopPageState extends State<PopularPopPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(3, (index) {
+    _bannerAds = List<BannerAd>.generate(20, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/8177769031',
         'ca-app-pub-8363980854824352/2950660378',
-        'ca-app-pub-8363980854824352/6610703786'
+        'ca-app-pub-8363980854824352/6610703786',
+        'ca-app-pub-8363980854824352/5012565556',
+        'ca-app-pub-8363980854824352/6646562499',
+        'ca-app-pub-8363980854824352/5455418680',
+        'ca-app-pub-8363980854824352/4630773246',
+        'ca-app-pub-8363980854824352/2735237649',
+        'ca-app-pub-8363980854824352/9203092007',
+        'ca-app-pub-8363980854824352/9085023571',
+        'ca-app-pub-8363980854824352/6623679054',
+        'ca-app-pub-8363980854824352/3507912192',
+        'ca-app-pub-8363980854824352/2543665958',
+        'ca-app-pub-8363980854824352/8166563691',
+        'ca-app-pub-8363980854824352/4377360485',
+        'ca-app-pub-8363980854824352/7878789082',
+        'ca-app-pub-8363980854824352/4955944982',
+        'ca-app-pub-8363980854824352/5718362319',
+        'ca-app-pub-8363980854824352/8924794366',
+        'ca-app-pub-8363980854824352/4405280647'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -82,7 +99,7 @@ class _PopularPopPageState extends State<PopularPopPage> {
         physics: BouncingScrollPhysics(),
         itemCount: pops.length < 60 ? pops.length : 60,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
+          if ((index + 1) % 3 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(
@@ -90,7 +107,7 @@ class _PopularPopPageState extends State<PopularPopPage> {
                 GestureDetector(
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => VideoPlayerPotraitPage(
+                      builder: (context) => VideoPlayerLandscapePage(
                         videoUrl: pops[index]['videoUrl'],
                       ),
                     ));
@@ -185,15 +202,14 @@ class _PopularPopPageState extends State<PopularPopPage> {
                         height: 50,
                         child: AdWidget(ad: ad),
                       )
-                    : SizedBox(height: 50), // Placeholder for Ad
-                SizedBox(height: 10),
+                    : SizedBox(height: 0),
               ],
             );
           } else {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => VideoPlayerPotraitPage(
+                  builder: (context) => VideoPlayerLandscapePage(
                     videoUrl: pops[index]['videoUrl'],
                   ),
                 ));
@@ -469,53 +485,6 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
       ),
-    );
-  }
-}
-
-class VideoPlayerPotraitPage extends StatefulWidget {
-  final String videoUrl;
-
-  const VideoPlayerPotraitPage({Key? key, required this.videoUrl})
-      : super(key: key);
-
-  @override
-  _VideoPlayerPotraitPageState createState() => _VideoPlayerPotraitPageState();
-}
-
-class _VideoPlayerPotraitPageState extends State<VideoPlayerPotraitPage> {
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
-
-  @override
-  void initState() {
-    super.initState();
-    _videoPlayerController = VideoPlayerController.network(widget.videoUrl);
-    _chewieController = ChewieController(
-      videoPlayerController: _videoPlayerController,
-      allowFullScreen: true,
-      aspectRatio: 9 / 19.5,
-      allowMuting: true,
-      autoPlay: true,
-      looping: true,
-    );
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xff0d0d0d),
-      body: Center(
-          child: Chewie(
-        controller: _chewieController,
-      )),
     );
   }
 }

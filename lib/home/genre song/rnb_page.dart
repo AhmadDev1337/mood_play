@@ -144,8 +144,8 @@ class _RnBPageState extends State<RnBPage> {
                         height: 50,
                         child: AdWidget(ad: ad),
                       )
-                    : SizedBox(height: 50),
-                SizedBox(height: 10),
+                    : SizedBox(height: 0),
+                
               ],
             );
           } else {
