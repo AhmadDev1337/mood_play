@@ -21,7 +21,7 @@ class _HipHopPageState extends State<HipHopPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(17, (index) {
+    _bannerAds = List<BannerAd>.generate(20, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/7761167761',
         'ca-app-pub-8363980854824352/4034509891',
@@ -38,7 +38,11 @@ class _HipHopPageState extends State<HipHopPage> {
         'ca-app-pub-8363980854824352/9547912216',
         'ca-app-pub-8363980854824352/9004986731',
         'ca-app-pub-8363980854824352/2882748749',
-        'ca-app-pub-8363980854824352/7628325887'
+        'ca-app-pub-8363980854824352/7628325887',
+        'ca-app-pub-8363980854824352/9280636134',
+        'ca-app-pub-8363980854824352/2236382495',
+        'ca-app-pub-8363980854824352/7225819448',
+        'ca-app-pub-8363980854824352/8874793098'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -94,9 +98,9 @@ class _HipHopPageState extends State<HipHopPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: hiphops.length < 68 ? hiphops.length : 68,
+        itemCount: hiphops.length < 100 ? hiphops.length : 100,
         itemBuilder: (context, index) {
-          if ((index + 1) % 4 == 0 && index != 0) {
+          if ((index + 1) % 5 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(

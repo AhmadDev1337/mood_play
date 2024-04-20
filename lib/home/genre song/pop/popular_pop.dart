@@ -97,9 +97,9 @@ class _PopularPopPageState extends State<PopularPopPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: pops.length < 60 ? pops.length : 60,
+        itemCount: pops.length < 100 ? pops.length : 100,
         itemBuilder: (context, index) {
-          if ((index + 1) % 3 == 0 && index != 0) {
+          if ((index + 1) % 5 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(

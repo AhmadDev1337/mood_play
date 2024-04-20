@@ -316,6 +316,30 @@ class DetailPage extends StatefulWidget {
 
 class _DetailPageState extends State<DetailPage> {
   String searchText = '';
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/5778475012',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadInterstitialAd();
+  }
 
   List<dynamic> filterDataByTitle(String searchText) {
     return widget.detail.where((data) {
@@ -400,6 +424,7 @@ class _DetailPageState extends State<DetailPage> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          _loadInterstitialAd();
                           Navigator.push(
                             context,
                             MaterialPageRoute(

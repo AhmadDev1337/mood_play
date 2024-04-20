@@ -21,12 +21,20 @@ class _JazzPageState extends State<JazzPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(4, (index) {
+    _bannerAds = List<BannerAd>.generate(12, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/2190945189',
         'ca-app-pub-8363980854824352/4017681103',
         'ca-app-pub-8363980854824352/9707640412',
-        'ca-app-pub-8363980854824352/1391517764'
+        'ca-app-pub-8363980854824352/1391517764',
+        'ca-app-pub-8363980854824352/1945039776',
+        'ca-app-pub-8363980854824352/5834315338',
+        'ca-app-pub-8363980854824352/5586903321',
+        'ca-app-pub-8363980854824352/5074600142',
+        'ca-app-pub-8363980854824352/7005794767',
+        'ca-app-pub-8363980854824352/5494569831',
+        'ca-app-pub-8363980854824352/4181488162',
+        'ca-app-pub-8363980854824352/5692713092'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -82,9 +90,9 @@ class _JazzPageState extends State<JazzPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: jazzs.length < 80 ? jazzs.length : 80,
+        itemCount: jazzs.length < 60 ? jazzs.length : 60,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
+          if ((index + 1) % 5 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(

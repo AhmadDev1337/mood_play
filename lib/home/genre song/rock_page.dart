@@ -21,12 +21,28 @@ class _RockPageState extends State<RockPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(4, (index) {
+    _bannerAds = List<BannerAd>.generate(20, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/2550053741',
         'ca-app-pub-8363980854824352/4696353860',
         'ca-app-pub-8363980854824352/1878618838',
-        'ca-app-pub-8363980854824352/3080019862'
+        'ca-app-pub-8363980854824352/3080019862',
+        'ca-app-pub-8363980854824352/5270073088',
+        'ca-app-pub-8363980854824352/7269550467',
+        'ca-app-pub-8363980854824352/3095002748',
+        'ca-app-pub-8363980854824352/7936281799',
+        'ca-app-pub-8363980854824352/1781921079',
+        'ca-app-pub-8363980854824352/6251982269',
+        'ca-app-pub-8363980854824352/2017223787',
+        'ca-app-pub-8363980854824352/5365108717',
+        'ca-app-pub-8363980854824352/7845099680',
+        'ca-app-pub-8363980854824352/6391583069',
+        'ca-app-pub-8363980854824352/6057058069',
+        'ca-app-pub-8363980854824352/7077978775',
+        'ca-app-pub-8363980854824352/5764897108',
+        'ca-app-pub-8363980854824352/4743976390',
+        'ca-app-pub-8363980854824352/4451815431',
+        'ca-app-pub-8363980854824352/6380491692'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -82,9 +98,9 @@ class _RockPageState extends State<RockPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: rocks.length < 80 ? rocks.length : 80,
+        itemCount: rocks.length < 100 ? rocks.length : 100,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
+          if ((index + 1) % 5 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(

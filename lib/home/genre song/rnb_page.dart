@@ -21,12 +21,28 @@ class _RnBPageState extends State<RnBPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(4, (index) {
+    _bannerAds = List<BannerAd>.generate(20, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/5680765495',
         'ca-app-pub-8363980854824352/4790355654',
         'ca-app-pub-8363980854824352/1995504062',
-        'ca-app-pub-8363980854824352/6452272755'
+        'ca-app-pub-8363980854824352/6452272755',
+        'ca-app-pub-8363980854824352/2281464585',
+        'ca-app-pub-8363980854824352/2334269629',
+        'ca-app-pub-8363980854824352/1546450490',
+        'ca-app-pub-8363980854824352/2086642012',
+        'ca-app-pub-8363980854824352/2185880216',
+        'ca-app-pub-8363980854824352/7896204606',
+        'ca-app-pub-8363980854824352/5686141525',
+        'ca-app-pub-8363980854824352/8559716873',
+        'ca-app-pub-8363980854824352/8316691219',
+        'ca-app-pub-8363980854824352/6716669080',
+        'ca-app-pub-8363980854824352/3152311675',
+        'ca-app-pub-8363980854824352/8460478673',
+        'ca-app-pub-8363980854824352/4377446204',
+        'ca-app-pub-8363980854824352/5884284783',
+        'ca-app-pub-8363980854824352/1839230006',
+        'ca-app-pub-8363980854824352/9433814846'
       ];
       return BannerAd(
         adUnitId: adUnitIds[index],
@@ -82,9 +98,9 @@ class _RnBPageState extends State<RnBPage> {
       child: ListView.builder(
         shrinkWrap: true,
         physics: BouncingScrollPhysics(),
-        itemCount: rnbs.length < 80 ? rnbs.length : 80,
+        itemCount: rnbs.length < 100 ? rnbs.length : 100,
         itemBuilder: (context, index) {
-          if ((index + 1) % 2 == 0 && index != 0) {
+          if ((index + 1) % 5 == 0 && index != 0) {
             final ad = _bannerAds[_currentAdIndex];
             _currentAdIndex = (_currentAdIndex + 1) % _bannerAds.length;
             return Column(
@@ -145,7 +161,6 @@ class _RnBPageState extends State<RnBPage> {
                         child: AdWidget(ad: ad),
                       )
                     : SizedBox(height: 0),
-                
               ],
             );
           } else {
