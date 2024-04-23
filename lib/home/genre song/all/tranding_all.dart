@@ -20,7 +20,7 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
   bool _adsLoaded = false;
 
   void _loadBannerAds() {
-    _bannerAds = List<BannerAd>.generate(20, (index) {
+    _bannerAds = List<BannerAd>.generate(2, (index) {
       final adUnitIds = [
         'ca-app-pub-8363980854824352/5006742410',
         'ca-app-pub-8363980854824352/4374185583',
@@ -134,6 +134,10 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                             builder: (context) => DetailPage(
+                              imgUrl: trands[index]['imgUrl'],
+                              logoUrl: trands[index]['logoUrl'],
+                              name: trands[index]['name'],
+                              title: trands[index]['title'],
                               detail: trands[index]['detailPage'],
                             ),
                           ));
@@ -236,6 +240,10 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => DetailPage(
+                          imgUrl: trands[index]['imgUrl'],
+                          logoUrl: trands[index]['logoUrl'],
+                          name: trands[index]['name'],
+                          title: trands[index]['title'],
                           detail: trands[index]['detailPage'],
                         ),
                       ));
@@ -306,9 +314,19 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
 }
 
 class DetailPage extends StatefulWidget {
+  final String imgUrl;
+  final String logoUrl;
+  final String name;
+  final String title;
   final List<dynamic> detail;
 
-  DetailPage({required this.detail});
+  DetailPage({
+    required this.imgUrl,
+    required this.logoUrl,
+    required this.name,
+    required this.title,
+    required this.detail,
+  });
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -412,7 +430,134 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Column(
+              children: [
+                Container(
+                  height: 150,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          widget.imgUrl,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(250),
+                          color: Colors.grey.shade900,
+                        ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(250),
+                              child: Image.network(
+                                widget.logoUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            width: 70,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "YouTube :",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(
+                                  widget.name,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Container(
+                            width: 70,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "TikTok :",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  widget.name,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10, left: 20, top: 40),
+              child: Text(
+                "Videos",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
