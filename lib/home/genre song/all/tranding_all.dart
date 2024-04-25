@@ -115,14 +115,14 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                   child: Column(
                     children: [
                       Container(
-                        height: 150,
+                        height: 200,
                         child: Stack(
                           fit: StackFit.expand,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(8),
                               child: Image.network(
-                                trands[index]['imgUrl'],
+                                trands[index]['thumbnail'],
                                 fit: BoxFit.fill,
                               ),
                             ),
@@ -138,6 +138,8 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                               logoUrl: trands[index]['logoUrl'],
                               name: trands[index]['name'],
                               title: trands[index]['title'],
+                              youTube: trands[index]['youTube'],
+                              tikTok: trands[index]['tikTok'],
                               detail: trands[index]['detailPage'],
                             ),
                           ));
@@ -228,7 +230,7 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: Image.network(
-                            trands[index]['imgUrl'],
+                            trands[index]['thumbnail'],
                             fit: BoxFit.fill,
                           ),
                         ),
@@ -244,6 +246,8 @@ class _TrandingAllPageState extends State<TrandingAllPage> {
                           logoUrl: trands[index]['logoUrl'],
                           name: trands[index]['name'],
                           title: trands[index]['title'],
+                          youTube: trands[index]['youTube'],
+                          tikTok: trands[index]['tikTok'],
                           detail: trands[index]['detailPage'],
                         ),
                       ));
@@ -318,6 +322,8 @@ class DetailPage extends StatefulWidget {
   final String logoUrl;
   final String name;
   final String title;
+  final String youTube;
+  final String tikTok;
   final List<dynamic> detail;
 
   DetailPage({
@@ -325,6 +331,8 @@ class DetailPage extends StatefulWidget {
     required this.logoUrl,
     required this.name,
     required this.title,
+    required this.youTube,
+    required this.tikTok,
     required this.detail,
   });
 
@@ -492,7 +500,7 @@ class _DetailPageState extends State<DetailPage> {
                             height: 5,
                           ),
                           Container(
-                            width: 70,
+                            width: 120,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -504,7 +512,7 @@ class _DetailPageState extends State<DetailPage> {
                                   ),
                                 ),
                                 Text(
-                                  widget.name,
+                                  widget.youTube,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 10,
@@ -517,7 +525,7 @@ class _DetailPageState extends State<DetailPage> {
                             height: 2,
                           ),
                           Container(
-                            width: 70,
+                            width: 120,
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -530,7 +538,7 @@ class _DetailPageState extends State<DetailPage> {
                                 ),
                                 SizedBox(width: 10),
                                 Text(
-                                  widget.name,
+                                  widget.tikTok,
                                   style: TextStyle(
                                     color: Colors.grey,
                                     fontSize: 10,
