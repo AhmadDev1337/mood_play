@@ -120,10 +120,9 @@ class _PopularPopPageState extends State<PopularPopPage> {
                           fit: StackFit.expand,
                           children: [
                             ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
                               child: Image.network(
                                 pops[index]['thumbnail'],
-                                fit: BoxFit.fill,
+                                fit: BoxFit.cover,
                               ),
                             ),
                           ],
@@ -223,15 +222,14 @@ class _PopularPopPageState extends State<PopularPopPage> {
               child: Column(
                 children: [
                   Container(
-                    height: 150,
+                    height: 200,
                     child: Stack(
                       fit: StackFit.expand,
                       children: [
                         ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
                           child: Image.network(
                             pops[index]['thumbnail'],
-                            fit: BoxFit.fill,
+                            fit: BoxFit.cover,
                           ),
                         ),
                       ],

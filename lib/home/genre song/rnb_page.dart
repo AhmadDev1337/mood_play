@@ -19,6 +19,24 @@ class _RnBPageState extends State<RnBPage> {
   late List<BannerAd> _bannerAds;
   int _currentAdIndex = 0;
   bool _adsLoaded = false;
+  InterstitialAd? _interstitialAd;
+
+  void _loadInterstitialAd() {
+    InterstitialAd.load(
+      adUnitId: 'ca-app-pub-8363980854824352/7081477072',
+      request: AdRequest(),
+      adLoadCallback: InterstitialAdLoadCallback(
+        onAdLoaded: (InterstitialAd ad) {
+          _interstitialAd = ad;
+          _interstitialAd!.show();
+          log('Ad onAdLoaded');
+        },
+        onAdFailedToLoad: (LoadAdError error) {
+          log('Interstitial ad failed to load: $error');
+        },
+      ),
+    );
+  }
 
   void _loadBannerAds() {
     _bannerAds = List<BannerAd>.generate(20, (index) {
@@ -69,6 +87,7 @@ class _RnBPageState extends State<RnBPage> {
     super.initState();
     fetchData();
     _loadBannerAds();
+    _loadInterstitialAd();
   }
 
   fetchData() async {
@@ -107,9 +126,10 @@ class _RnBPageState extends State<RnBPage> {
               children: [
                 GestureDetector(
                   onTap: () {
+                    _loadInterstitialAd();
                     Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => DetailPage(
-                        detail: rnbs[index]['detailPage'],
+                      builder: (context) => VideoPlayerLandscapePage(
+                        videoUrl: rnbs[index]['videoUrl'],
                       ),
                     ));
                   },
@@ -132,7 +152,7 @@ class _RnBPageState extends State<RnBPage> {
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(8),
                                     child: Image.network(
-                                      rnbs[index]['logoUrl'],
+                                      rnbs[index]['thumbnail'],
                                       fit: BoxFit.cover,
                                     ),
                                   ),
@@ -141,7 +161,7 @@ class _RnBPageState extends State<RnBPage> {
                             ),
                             SizedBox(width: 10),
                             Text(
-                              rnbs[index]['name'],
+                              rnbs[index]['titleSong'],
                               style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.w500,
@@ -167,8 +187,8 @@ class _RnBPageState extends State<RnBPage> {
             return GestureDetector(
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => DetailPage(
-                    detail: rnbs[index]['detailPage'],
+                  builder: (context) => VideoPlayerLandscapePage(
+                    videoUrl: rnbs[index]['videoUrl'],
                   ),
                 ));
               },
@@ -191,7 +211,7 @@ class _RnBPageState extends State<RnBPage> {
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(8),
                                 child: Image.network(
-                                  rnbs[index]['logoUrl'],
+                                  rnbs[index]['thumbnail'],
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -200,7 +220,7 @@ class _RnBPageState extends State<RnBPage> {
                         ),
                         SizedBox(width: 10),
                         Text(
-                          rnbs[index]['name'],
+                          rnbs[index]['titleSong'],
                           style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
@@ -216,190 +236,6 @@ class _RnBPageState extends State<RnBPage> {
             );
           }
         },
-      ),
-    );
-  }
-}
-
-class DetailPage extends StatefulWidget {
-  final List<dynamic> detail;
-
-  DetailPage({required this.detail});
-
-  @override
-  State<DetailPage> createState() => _DetailPageState();
-}
-
-class _DetailPageState extends State<DetailPage> {
-  String searchText = '';
-  InterstitialAd? _interstitialAd;
-
-  void _loadInterstitialAd() {
-    InterstitialAd.load(
-      adUnitId: 'ca-app-pub-8363980854824352/7081477072',
-      request: AdRequest(),
-      adLoadCallback: InterstitialAdLoadCallback(
-        onAdLoaded: (InterstitialAd ad) {
-          _interstitialAd = ad;
-          _interstitialAd!.show();
-          log('Ad onAdLoaded');
-        },
-        onAdFailedToLoad: (LoadAdError error) {
-          log('Interstitial ad failed to load: $error');
-        },
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadInterstitialAd();
-  }
-
-  List<dynamic> filterDataByTitle(String searchText) {
-    return widget.detail.where((data) {
-      String title = data['titleSong'].toLowerCase();
-      return title.contains(searchText.toLowerCase());
-    }).toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: "MoodPlay",
-      home: Scaffold(
-        backgroundColor: Color(0xff0d0d0d),
-        appBar: AppBar(
-          backgroundColor: Color(0xff0d0d0d),
-          elevation: 0,
-          title: GestureDetector(
-            onTap: () {
-              Navigator.pop(context);
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.arrow_back,
-                  color: Colors.white,
-                ),
-                SizedBox(width: 18),
-                Text(
-                  "Playlist Song",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.4,
-                child: TextField(
-                  onChanged: (value) {
-                    setState(() {
-                      searchText = value;
-                    });
-                  },
-                  decoration: InputDecoration(
-                    hintText: 'Search song...',
-                    hintStyle: TextStyle(color: Colors.grey),
-                    filled: true,
-                    fillColor: Colors.white,
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(color: Colors.white),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-        body: Column(
-          children: [
-            Expanded(
-              child: ListView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                itemCount: filterDataByTitle(searchText).length,
-                itemBuilder: (BuildContext context, int index) {
-                  var filteredData = filterDataByTitle(searchText);
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          _loadInterstitialAd();
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => VideoPlayerLandscapePage(
-                                  videoUrl: widget.detail[index]
-                                      ['videoUrlSong']),
-                            ),
-                          );
-                        },
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: 130,
-                              height: 80,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(10),
-                                child: Image.network(
-                                  filteredData[index]['thumbnail'],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            SizedBox(width: 10),
-                            Container(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    filteredData[index]['titleSong'],
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w800,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: 5,
-                                  ),
-                                  Text(
-                                    filteredData[index]['nameAccount'],
-                                    style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 10,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: 15),
-                    ],
-                  );
-                },
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }

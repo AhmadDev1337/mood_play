@@ -136,6 +136,12 @@ class _KpopAlbumPageState extends State<KpopAlbumPage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => DetailPage(
+                                    imgUrl: songs[index]['imgUrl'],
+                                    logoUrl: songs[index]['logoUrl'],
+                                    name: songs[index]['name'],
+                                    youTube: songs[index]['youTube'],
+                                    tikTok: songs[index]['tikTok'],
+                                    title: songs[index]['title'],
                                     detail: filterDataByName(searchText)[index]
                                         ['detailPage'],
                                   ),
@@ -217,9 +223,23 @@ class _KpopAlbumPageState extends State<KpopAlbumPage> {
 }
 
 class DetailPage extends StatefulWidget {
+  final String imgUrl;
+  final String logoUrl;
+  final String name;
+  final String youTube;
+  final String tikTok;
+  final String title;
   final List<dynamic> detail;
 
-  DetailPage({required this.detail});
+  DetailPage({
+    required this.imgUrl,
+    required this.logoUrl,
+    required this.name,
+    required this.youTube,
+    required this.tikTok,
+    required this.title,
+    required this.detail,
+  });
 
   @override
   _DetailPageState createState() => _DetailPageState();
@@ -323,7 +343,134 @@ class _DetailPageState extends State<DetailPage> {
           ],
         ),
         body: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Column(
+              children: [
+                Container(
+                  height: 150,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(
+                          widget.imgUrl,
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 8),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Row(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(250),
+                          color: Colors.grey.shade900,
+                        ),
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(250),
+                              child: Image.network(
+                                widget.logoUrl,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.name,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w800,
+                              fontSize: 20,
+                            ),
+                          ),
+                          SizedBox(
+                            height: 5,
+                          ),
+                          Container(
+                            width: 120,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "YouTube :",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                Text(
+                                  widget.youTube,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 2,
+                          ),
+                          Container(
+                            width: 120,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  "TikTok :",
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Text(
+                                  widget.tikTok,
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.only(bottom: 10, left: 20, top: 40),
+              child: Text(
+                "Videos",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
             Expanded(
               child: ListView.builder(
                 shrinkWrap: true,
