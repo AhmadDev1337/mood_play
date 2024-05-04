@@ -8,6 +8,7 @@ import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:http/http.dart' as http;
 
+import 'all/information_page.dart';
 import 'all/mpshort_all_page.dart';
 import 'all/mp short/mpshort_page.dart';
 import 'all/tranding_all.dart';
@@ -227,6 +228,11 @@ class _AllPageState extends State<AllPage> {
               ),
             ),
             SizedBox(height: 30),
+            Divider(
+              height: 0.3,
+              color: Colors.grey,
+            ),
+            InformationPage(),
           ],
         ),
       ),
